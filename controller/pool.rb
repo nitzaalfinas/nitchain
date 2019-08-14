@@ -26,7 +26,7 @@ class Pool
 
                 if Wallet.valid_address_and_pubkey?(obj["data"]["from"], obj["pubkey"]) === true 
                     if Pool.valid_transaction?(obj) === true 
-                        return {success: true}.to_json
+                        return {success: true, data: obj["hash"]}.to_json
                     else
                         return {success: fail, msg: Pool.valid_transaction?(obj) }.to_json
                     end

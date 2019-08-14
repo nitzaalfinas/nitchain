@@ -1,6 +1,6 @@
 # nitchain
-Ruby blockchain
+NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain menggunakan konsensus Proof of Work dan proyek ini dibuat untuk keperluan riset. 
 
 ## Todo
-* validasi data transfer dengan signaturenya
+* Database key-value based!
 

@@ -22,7 +22,7 @@ post '/miner/pool/submit' do
     if MINE === 1
         Pool.submit(request.body.read)
     else
-        'not a miner'
+        {success: false, msg: 'not a miner' }.to_json 
     end
 end
 

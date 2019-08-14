@@ -56,13 +56,19 @@ class Wallet
             # kirim kepada pool
             send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
 
-            puts "send_to_pool"
-            puts send_to_pool
-            puts data_to_submit.to_json
+            # puts "send_to_pool"
+            # puts send_to_pool
+            # puts data_to_submit.to_json
 
-            return hash_string
+            obj_send_to_pool = JSON.parse(send_to_pool)
+
+            if obj_send_to_pool["success"] === true 
+                return hash_string
+            else
+                return obj_send_to_pool["msg"]
+            end
         else 
-            return is_this_valid_file_address
+            return is_this_valid_sender_file_address
         end
     end
 
@@ -85,10 +91,10 @@ class Wallet
             if "Nx#{Digest::SHA1.hexdigest(public_key_pem)}" == obj["address"] && "Nx#{Digest::SHA1.hexdigest(public_key_pem)}" == address 
                 return true
             else 
-                return "Fail. File format doesn't match"
+                return "Fail. Private key file format does not match"
             end
         else 
-            return "Fail. File not exist"
+            return "Fail. Private key file does not exist"
         end
     end
 
