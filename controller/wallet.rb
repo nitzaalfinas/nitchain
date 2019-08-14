@@ -22,15 +22,15 @@ class Wallet
         data[:from] = from
         data[:to] = to
         data[:amount] = amount
-        data[:time] = Time.now.utc
+        data[:time] = Time.now.utc.to_i
 
         main_pubkey_file = "#{MAIN_CONFIG_PATH}/main_pubkey"
         text = data.to_json
 
-        is_this_valid_file_address = Wallet.valid_file_address?(data[:from])
+        is_this_valid_sender_file_address = Wallet.valid_sender_file_address?(data[:from])
 
-        # cek dulu, apakah ada file private key
-        if is_this_valid_file_address === true
+        # cek dulu, apakah sender punya file private key
+        if is_this_valid_sender_file_address === true
 
             mykey_text = File.read("#{KEYSTORE_PATH}/#{from}")
             mykey_file_obj = JSON.parse(mykey_text)
@@ -42,18 +42,22 @@ class Wallet
             hash_string = Digest::SHA1.hexdigest(text)
             public_encrypt = destination_public_key.public_encrypt(text)
             encrypted_string = Base64.encode64(public_encrypt)
-            
 
+            sender_public_key_obj = Wallet.sender_key_obj(from)
+            sender_public_key = sender_public_key_obj["pubkey"]
+            
             data_to_submit = {}
             data_to_submit[:data] = data
             data_to_submit[:hash] = hash_string
             data_to_submit[:enc] = encrypted_string
             data_to_submit[:sign] = signature
+            data_to_submit[:pubkey] = sender_public_key
 
             # kirim kepada pool
             send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
 
             puts "send_to_pool"
+            puts send_to_pool
             puts data_to_submit.to_json
 
             return hash_string
@@ -64,7 +68,7 @@ class Wallet
 
     # == Kurang
     # 1. Cek apakah private key menghasilkan public key yang ada dalam file
-    def self.valid_file_address?(address)
+    def self.valid_sender_file_address?(address)
         file_full_path = "#{KEYSTORE_PATH}/#{address}"
 
         # cek dulu, apakah file address ada pada keystore
@@ -88,10 +92,29 @@ class Wallet
         end
     end
 
+    # == Keterangan
+    # Validasi file sudah dilakukan pada valid_sender_file_address
+    def self.sender_key_obj(address)
+        data_text = File.read("#{KEYSTORE_PATH}/#{address}")
+        return JSON.parse(data_text)
+    end
+
+    # == Dipanggil dari 
+    # Pool.submit
     def self.valid_address?(address)
         if address.length === 42
             return true
         else
+            return false
+        end
+    end
+
+    # == Dipanggil dari 
+    # Pool.submit
+    def self.valid_address_and_pubkey?(address, pubkey)
+        if "Nx#{Digest::SHA1.hexdigest(pubkey)}" === address
+            return true
+        else 
             return false
         end
     end

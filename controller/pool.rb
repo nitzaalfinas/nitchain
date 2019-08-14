@@ -1,10 +1,19 @@
-require_relative 'wallet'
-
 class Pool
 
     # == Keterangan
     # pada submit, data yang didapatkan adalah 
-    # {"data":{"from":"Nx76bbc1d213ea8b95a696bbbec14cb46191f25929","to":"Nx78c26710996465c0a26d5306859337865393f224","amount":"120","time":1565782559},"hash":"66bf09eb6550219827c6ed8b455905b09da2adb4","enc":"QUTWL7buMVqTF1HYalCX5EySZQgb9pKLT4PyeILOsD47tDZmLCOza3hqZnSR\nrau53jd6dKLmmS3+R23d2YBVnp6lfP3P40Fw9rqlnxvkc3YU9yVdUwyh2rEk\nBXjMwID1dYBhUDSJPiq1tCSv2azguOI6hQ86ZSD9bF4909dfMbRyClqVRsWD\novY5tgoImGWL0L1aTSi5FMKoTOZfHqTFF0SV+e0gMGQ9rs/nBIZ89JPKMKBK\nVM85iebOCkLN7fjM25Sl3GirCSk0i+4W7lMwDvKElqgzfKtwHszAUktiV4MM\ncbPSF4wfN2pU2tCVA4SY1xxMryfsX2cprAP6BtrTEg==\n"}
+    # {
+    #     "data":{
+    #         "from":"Nx3476e5c2b698c4746bc184f96b47815baa352cc3",
+    #         "to":"Nx6a578ada9acd3eec09bd695e1b213c0671887c4e",
+    #         "amount":"120",
+    #         "time":1565822616
+    #     },
+    #     "hash":"5a8560f081098191ea5baa50d51e0ef7270fecb6",
+    #     "enc":"XTBuRMxEROQwHnBPXL9uu6zj5PEr2sger+aPm2IUH1HOKbbMRLVxjemntxab\nQubvyXGJqGOV53ZYu43nTCM1GJf2m6DQX8uo+tJcS3kRR42QYnco5r/uzpGl\ndVmRB3ANsOSpvdYxrc9rMTZ7mJk76Gm4wCW5Dcr5pqHgxI3kByJZPewDmITZ\n7Rq8A8T/Q2m7rk/My2BxFEULFir9a7Soo4x7tBad/k5e+0IxYELI/uBBQusk\nmbcoM52rqem4vHVtGxISYTkziLVSfyD8g3+AHuVnVdXGCPjWOgJc7DKlZFYb\nbpn+zy/puRQHj1N2HhxIGhdUj+iS7hw14As96xlHyQ==\n",
+    #     "sign":"go2WCLlUgI2qQvs6T5mN2/XbF/VOeUNSu0IDsq1RlvMMDo3SFFGn64RqPEOF\nPEPLKqXk54Bg5qfXRtzF78ha4OvSagfNABpdcHa6HTbnZzq+OCoJl/PqfJb9\nrRuXfjQjLsgBv89KWgYkOs27wJ6n6hsDTtlIGzsrXVm4Wpx/Jt52umwXIaEi\ncVVULKZIfsN6KsVdvcm3f9wxEj3ZAjNDrax6UiC3pWFSiEUfAbG2Qvd9JT5G\nPlBwXN0dmxgeG4vG5v4rL91r9QfOTqtX/weten+ZCp1TVgcETbEKi/vWOuSR\nGv2XXDsAHsspLha1VnFG+F9MXtPXpDNpXbJP1jOWwA==\n",
+    #     "pubkey":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApja+JB+2SKRyGvRszoTM\ndjiKVgMfSZL7drHFJQ+CoD0wzthEPawWRWHEhdkGzZWGyXGX07X5g9dKBRFWCqVA\nqXxH6T940hE6A+0baXAltJLsAkno70gCj6tAfWneEKmwhN6/lAthn3dyucH3EXTY\no12uCw9k6r3LHnVQI/7QnakjI9sDQPXTjVSDk+ILUcBG3Numy1o4o8onJ0LsqvGC\nEkPi/xr0lRwSr/UX/D7pcW8UxGl63rcvje/cEvE/06gMvFKKP29/nFXXmDm6u3Vc\nnmHwUccjTthQiGVBHELKbPl7OPZM02jBMF1Aria4mNRktJMLRiCawM5FDeSw/fqo\nxwIDAQAB\n-----END PUBLIC KEY-----\n"
+    # }
     def self.submit(data)
 
         obj = JSON.parse(data)
@@ -15,18 +24,20 @@ class Pool
             # cek dulu, apakah address valid
             if Wallet.valid_address?(obj["data"]["from"]) === true && Wallet.valid_address?(obj["data"]["to"]) === true
 
-                is_this_valid_transaction = Pool.valid_transaction?(obj)
-
-                if is_this_valid_transaction == true 
-                    return true
-                else
-                    return is_this_valid_transaction
+                if Wallet.valid_address_and_pubkey?(obj["data"]["from"], obj["pubkey"]) === true 
+                    if Pool.valid_transaction?(obj) === true 
+                        return {success: true}.to_json
+                    else
+                        return {success: fail, msg: Pool.valid_transaction?(obj) }.to_json
+                    end
+                else 
+                    return {success: fail, msg: "Fail. Not public key and address not match!" }.to_json
                 end
             else 
-                return "Fail. Address is not valid"    
+                return {success: fail, msg: "Fail. Address is not valid" }.to_json
             end
         else
-            return "Fail. From and to can't be the same"
+            return {success: fail, msg: "Fail. From and to can't be the same" }.to_json
         end
     end
 
@@ -37,38 +48,57 @@ class Pool
                     if obj["data"]["time"] && obj["data"]["time"] != ""
                         if obj["hash"] && obj["hash"] != ""
                             if obj["enc"] && obj["enc"] != ""
+                                if obj["sign"] && obj["sign"] != ""
+                                    if obj["pubkey"] && obj["pubkey"] != ""
 
-                                # decrypt dulu menggunakan private ke master
-                                private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
-                                string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
+                                        # decrypt dulu menggunakan private ke master
+                                        private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
+                                        string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
 
-                                puts "string_decrypt"
-                                puts string_decrypt
+                                        # puts "string_decrypt"
+                                        # puts string_decrypt
 
-                                decrypt_obj = JSON.parse(string_decrypt)
+                                        # puts "enc sign"
+                                        # puts Base64.decode64(obj["sign"])
 
-                                if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
-                                    return true
-                                else
-                                    return "Fail. Data is not match"
+                                        decrypt_obj = JSON.parse(string_decrypt)
+
+                                        # periksa pesan decrypt
+                                        if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
+
+                                            # periksa signature menggunakan sender public key, apakah benar
+                                            sender_public_key = OpenSSL::PKey::RSA.new(obj["pubkey"])
+                                            if sender_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(obj["sign"]), string_decrypt) === true
+                                                return true
+                                            else 
+                                                return "Signature is not match"
+                                            end
+                                        else
+                                            return "Data is not match"
+                                        end
+                                    else 
+                                        return "Sender public key required"     
+                                    end
+                                else 
+                                    return "Signature required"     
                                 end
                             else 
-                                return "Fail. Enc required"     
+                                return "Enc required"     
                             end
                         else 
-                            return "Fail. Hash required"     
+                            return "Hash required"     
                         end
                     else
-                        return "Fail. Time required"     
+                        return "Time required"     
                     end
                 else 
-                    return "Fail. Amount required"
+                    return "Amount required"
                 end
             else 
-                return "Fail. To required"
+                return "To required"
             end
         else 
-            return "Fail. From required"
+            return "From required"
         end
     end
 end
