@@ -42,66 +42,38 @@ class Pool
     end
 
     def self.valid_transaction?(obj)
-        if obj["data"]["from"] && obj["data"]["from"] != ""
-            if obj["data"]["to"] && obj["data"]["to"] != ""
-                if obj["data"]["amount"] && obj["data"]["amount"] != ""
-                    if obj["data"]["time"] && obj["data"]["time"] != ""
-                        if obj["hash"] && obj["hash"] != ""
-                            if obj["enc"] && obj["enc"] != ""
-                                if obj["sign"] && obj["sign"] != ""
-                                    if obj["pubkey"] && obj["pubkey"] != ""
+        if (obj["data"]["from"] && obj["data"]["from"] != "") && (obj["data"]["to"] && obj["data"]["to"] != "") && (obj["data"]["amount"] && obj["data"]["amount"] != "") && (obj["data"]["time"] && obj["data"]["time"] != "") && (obj["hash"] && obj["hash"] != "") && (obj["enc"] && obj["enc"] != "") && (obj["sign"] && obj["sign"] != "") && (obj["pubkey"] && obj["pubkey"] != "")
 
-                                        # decrypt dulu menggunakan private ke master
-                                        private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
-                                        string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
+            # decrypt dulu menggunakan private ke master
+            private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
+            string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
 
-                                        decrypt_obj = JSON.parse(string_decrypt)
+            decrypt_obj = JSON.parse(string_decrypt)
 
-                                        # periksa pesan decrypt
-                                        if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
+            # periksa pesan decrypt
+            if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
 
-                                            # periksa signature menggunakan sender public key, apakah benar
-                                            sender_public_key = OpenSSL::PKey::RSA.new(obj["pubkey"])
-                                            if sender_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(obj["sign"]), string_decrypt) === true
-                                                
-                                                Mongo::Logger.logger.level = ::Logger::FATAL
+                # periksa signature menggunakan sender public key, apakah benar
+                sender_public_key = OpenSSL::PKey::RSA.new(obj["pubkey"])
+                if sender_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(obj["sign"]), string_decrypt) === true
+                    
+                    Mongo::Logger.logger.level = ::Logger::FATAL
 
-                                                client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)  
-                                                if client[:pools].insert_one(obj)
-                                                    client.close
-                                                    return true
-                                                else 
-                                                    return "ErrDB Pool"
-                                                end
-                                            else 
-                                                return "Signature is not match"
-                                            end
-                                        else
-                                            return "Data is not match"
-                                        end
-                                    else 
-                                        return "Sender public key required"     
-                                    end
-                                else 
-                                    return "Signature required"     
-                                end
-                            else 
-                                return "Enc required"     
-                            end
-                        else 
-                            return "Hash required"     
-                        end
-                    else
-                        return "Time required"     
+                    client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)  
+                    if client[:pools].insert_one(obj)
+                        client.close
+                        return true
+                    else 
+                        return "ErrDB Pool"
                     end
                 else 
-                    return "Amount required"
+                    return "Signature is not match"
                 end
-            else 
-                return "To required"
+            else
+                return "Data is not match"
             end
         else 
-            return "From required"
+            return "Wrong input!"
         end
     end
 end
