@@ -7,7 +7,7 @@ require 'mongo'
 
 require_relative 'env'
 require_relative 'controller/wallet'
-require_relative 'controller/pool'
+require_relative 'controller/miner_pool'
 
 get '/' do 
     'NitChain'
@@ -21,10 +21,14 @@ end
 # pbkey
 post '/miner/pool/submit' do 
     if MINE === 1
-        Pool.submit(request.body.read)
+        MinerPool.submit(request.body.read)
     else
         {success: false, msg: 'not a miner' }.to_json 
     end
+end
+
+get '/miner/mine' do 
+    MinerMine.create_merkle
 end
 
 # == Todo

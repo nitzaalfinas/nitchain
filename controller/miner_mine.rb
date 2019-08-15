@@ -1,4 +1,4 @@
-class Miner 
+class MinerMine
 
     def self.save_pubkey
         
@@ -8,7 +8,7 @@ class Miner
 
     end
 
-    def self.create_merkle_tree
+    def self.create_merkle
         # ambil semua data dari pool
         Mongo::Logger.logger.level = ::Logger::FATAL
 

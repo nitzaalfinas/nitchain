@@ -1,15 +1,14 @@
 # nitchain
-NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain menggunakan konsensus Proof of Work dan proyek ini dibuat untuk keperluan riset. 
+NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain menggunakan konsensus Proof of Work dan proyek ini dibuat untuk keperluan riset.
 
-## Install 
+## Install
 * `bundle install`
 
-## Run 
-`bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 9090` 
+## Run
+`bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 9090`
 
-## Test 
+## Test
 `rspec spec/main_spec.rb`
 
 ## Todo
 * Mine
-

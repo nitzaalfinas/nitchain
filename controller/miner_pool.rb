@@ -1,4 +1,4 @@
-class Pool
+class MinerPool
 
     # == Keterangan
     # pada submit, data yang didapatkan adalah 
@@ -25,10 +25,10 @@ class Pool
             if Wallet.valid_address?(obj["data"]["from"]) === true && Wallet.valid_address?(obj["data"]["to"]) === true
 
                 if Wallet.valid_address_and_pubkey?(obj["data"]["from"], obj["pubkey"]) === true 
-                    if Pool.valid_transaction?(obj) === true 
+                    if MinerPool.valid_transaction?(obj) === true 
                         return {success: true, data: obj["hash"]}.to_json
                     else
-                        return {success: fail, msg: Pool.valid_transaction?(obj) }.to_json
+                        return {success: fail, msg: MinerPool.valid_transaction?(obj) }.to_json
                     end
                 else 
                     return {success: fail, msg: "Fail. Not public key and address not match!" }.to_json
