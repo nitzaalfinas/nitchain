@@ -5,5 +5,6 @@ gem 'openssl'
 gem 'mongo'
 
 group :test do 
-    # add test gem
+    gem "rack-test", require: "rack/test"
+    gem "rspec"
 end

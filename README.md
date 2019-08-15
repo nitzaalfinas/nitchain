@@ -7,6 +7,9 @@ NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain mengg
 ## Run 
 `bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 9090` 
 
+## Test 
+`rspec spec/main_spec.rb`
+
 ## Todo
 * Mine
 

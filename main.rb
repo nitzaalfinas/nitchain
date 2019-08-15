@@ -1,9 +1,9 @@
-# require 'sinatra'
+require 'sinatra'
 
-# require 'openssl'
-# require 'json'
-# require 'base64'
-# require 'mongo'
+require 'openssl'
+require 'json'
+require 'base64'
+require 'mongo'
 
 require_relative 'env'
 require_relative 'controller/wallet'
@@ -40,7 +40,6 @@ end
 post '/wallet/transfer' do 
     Wallet.transfer(params[:from], params[:to], params[:amount])
 end
-
 
 
 get '/blockchain' do 
