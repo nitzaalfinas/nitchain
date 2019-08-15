@@ -2,11 +2,17 @@ require 'sinatra'
 
 require 'openssl'
 require 'json'
-require "base64"
+require 'base64'
+require 'mongo'
 
 require_relative 'env'
 require_relative 'controller/wallet'
 require_relative 'controller/pool'
+
+# configure do
+#     db = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)  
+#     set :mongo_db, db[DATABASE_NAME]
+# end
 
 get '/' do 
     'NitChain'
