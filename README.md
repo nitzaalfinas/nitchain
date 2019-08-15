@@ -6,6 +6,9 @@ NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain mengg
 * `gem install mongo` 
 * `gem install bson_ext`
 
+## Run 
+`ruby main.rb`
+
 ## Todo
-* Database key-value based!
+* Pool!
 
