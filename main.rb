@@ -8,6 +8,7 @@ require 'mongo'
 require_relative 'env'
 require_relative 'controller/wallet'
 require_relative 'controller/miner_pool'
+require_relative 'controller/miner_mine'
 
 get '/' do 
     'NitChain'
@@ -27,7 +28,8 @@ post '/miner/pool/submit' do
     end
 end
 
-get '/miner/mine' do 
+get '/miner/mine/create_merkle' do 
+    puts "sampai sini"
     MinerMine.create_merkle
 end
 
