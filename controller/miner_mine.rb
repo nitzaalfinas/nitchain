@@ -8,6 +8,8 @@ class MinerMine
 
     end
 
+    # Todo:
+    # Sebelum buat merkle tree, hash harus diperiksan. Hash tidak boleh ada yang sama!
     def self.create_merkle
 
         puts "saya dipanggil"
@@ -20,7 +22,7 @@ class MinerMine
         items = client[:pools].find({})
 
         # hitung jumlah data 
-        puts items.count
+        # puts items.count
         
         #puts client[:pools].
 
@@ -38,34 +40,61 @@ class MinerMine
         # end
         
         merkles = client[:merkles].find({"creating_merkle" => true})
-        merkles_arr = merkles.to_a
-        # puts merkles_arr
-
-        if MinerMine.merkle_proses(merkles, merkles_arr).count != 0
-            
-        end
-
-
-    end
-
-    def self.merkle_proses(merkles, merkles_arr)
-
-        arr_hash = []
-    
-        urut = 0
+        merkles_arr = []
         merkles.each do |f|
-            urut = urut + 1
-            if urut % 2 == 0
-                puts ""
-                puts "--->"
-                puts urut
-                puts merkles_arr[urut-2]["hash"]
-                puts merkles_arr[urut-1]["hash"]
+            merkles_arr.push(f["hash"])
+        end
+        # puts "merkles_arr"
+        # puts merkles_arr.to_s
 
-                arr_hash.push(merkles_arr[urut-2]["hash"] + "**" + merkles_arr[urut-1]["hash"])
+        loop do
+
+            merkles_arr = MinerMine.merkle_proses(merkles_arr)
+
+            # puts "merkles_arr"
+            # puts merkles_arr.to_s
+            # puts merkles_arr.count
+            
+            if merkles_arr.count == 1
+                break 
             end
         end
 
-        return arr_hash
+        return merkles_arr
+
+    end
+
+    def self.merkle_proses(merkles_arr)
+
+        # cek juga jumlah merkle array terlebih dahulu, jika ganjil, maka tambahkan satu dibelakang
+        # penggunaan ini cukup menarik pada tutorial ini https://stackoverflow.com/questions/18163475/ruby-check-if-even-number-float
+        genap_ganjil = merkles_arr.count / 2.0
+        # puts genap_ganjil
+        if genap_ganjil.round.even? == true
+            merkles_arr.push(merkles_arr.last)
+        end
+
+        nu_arr = []
+        urut = 0
+        merkles_arr.each do |f|
+            urut = urut + 1
+            if urut % 2 == 0
+                # puts ""
+                # puts "--->"
+                # puts urut
+                # puts merkles_arr[urut-2]
+                # puts merkles_arr[urut-1]
+
+                # gabungkan hash
+                hash_join = merkles_arr[urut-2] + merkles_arr[urut-1]
+
+                # buat hash baru dari yang sudah digabungkan 
+                nuhash = Digest::SHA1.hexdigest(hash_join)
+
+                nu_arr.push(nuhash)
+            end
+        end
+
+        return nu_arr
     end
 end
