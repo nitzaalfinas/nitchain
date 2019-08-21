@@ -28,10 +28,15 @@ post '/miner/pool/submit' do
     end
 end
 
-get '/miner/mine/create_merkle' do 
-    puts "sampai sini"
-    MinerMine.create_merkle
+get '/miner/mine' do 
+    MineMine.mine
 end
+
+# dinonaktifkan dulu, sepertinya ketika membuat merkle root harus disertai dengan mine
+# get '/miner/mine/create_merkle' do 
+#     puts "sampai sini"
+#     MinerMine.create_merkle
+# end
 
 # == Todo
 # only who own this server can execute this code

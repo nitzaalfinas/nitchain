@@ -4,9 +4,24 @@ class MinerMine
         
     end
 
-    def self.pool_submit 
+
+    def self.mine 
+        merkle_root = Miner.create_merkle
+
+        data = {}
+        data[:hash] = ""
+        data[:time] = ""
+        data[:difficulty] = ""
+        data[:transactions] = ""
+        data[:total] = ""
+        data[:merkle_root] = merkle_root
+        data[:nonce] = ""
+
+        
 
     end
+
+
 
     # Todo:
     # Sebelum buat merkle tree, hash harus diperiksan. Hash tidak boleh ada yang sama!
@@ -60,6 +75,7 @@ class MinerMine
             end
         end
 
+        # hasil akhir ini adalah merkle root!
         return merkles_arr
 
     end
