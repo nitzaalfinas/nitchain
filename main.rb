@@ -29,7 +29,7 @@ post '/miner/pool/submit' do
 end
 
 get '/miner/mine' do 
-    MineMine.mine
+    MinerMine.mine
 end
 
 # dinonaktifkan dulu, sepertinya ketika membuat merkle root harus disertai dengan mine

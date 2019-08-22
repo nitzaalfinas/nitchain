@@ -6,17 +6,24 @@ class MinerMine
 
 
     def self.mine 
-        merkle_root = Miner.create_merkle
+        
 
         data = {}
         data[:hash] = ""
-        data[:time] = ""
-        data[:difficulty] = ""
-        data[:transactions] = ""
-        data[:total] = ""
-        data[:merkle_root] = merkle_root
         data[:nonce] = ""
+        data[:difficulty] = ""
 
+        merkle_obj = MinerMine.create_merkle
+
+        # yang mau di hash
+        mine_this = {}
+        mine_this[:prevhash] = ""
+        mine_this[:time] = Time.now.utc.to_i
+        mine_this[:transactions] = merkle_obj[:transaction_count]
+        mine_this[:total] = merkle_obj[:total]
+        mine_this[:merkle_root] = merkle_obj[:merkle_root]
+
+        return mine_this
         
 
     end
@@ -54,29 +61,33 @@ class MinerMine
         #     client[:merkles].insert_one(x)
         # end
         
+        # cari yang sedang di flag untuk membuat merkle
         merkles = client[:merkles].find({"creating_merkle" => true})
         merkles_arr = []
         merkles.each do |f|
             merkles_arr.push(f["hash"])
         end
-        # puts "merkles_arr"
-        # puts merkles_arr.to_s
+
+        # jumlahkan juga semua ntc transaksi
+        total = 0
+        merkles.each do |f|
+            total = total + f["amount"].to_f
+        end
 
         loop do
-
             merkles_arr = MinerMine.merkle_proses(merkles_arr)
 
-            # puts "merkles_arr"
-            # puts merkles_arr.to_s
-            # puts merkles_arr.count
-            
             if merkles_arr.count == 1
                 break 
             end
         end
 
         # hasil akhir ini adalah merkle root!
-        return merkles_arr
+        return {
+            merkle_root: merkles_arr,
+            transaction_count: items.count,
+            total: total
+        }
 
     end
 

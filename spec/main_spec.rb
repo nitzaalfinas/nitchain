@@ -71,7 +71,7 @@ describe "NitChain application" do
         # sebelum testing, harus dibuat dulu banyak data dalam database
         MINE = 1
 
-        get '/miner/mine/create_merkle'
+        get '/miner/mine'
 
         puts last_response.body
     end
