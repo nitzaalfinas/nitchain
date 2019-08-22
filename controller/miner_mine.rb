@@ -17,15 +17,32 @@ class MinerMine
 
         # yang mau di hash
         mine_this = {}
-        mine_this[:prevhash] = ""
-        mine_this[:time] = Time.now.utc.to_i
+        mine_this[:prevhash]     = ""
+        mine_this[:time]         = Time.now.utc.to_i
         mine_this[:transactions] = merkle_obj[:transaction_count]
-        mine_this[:total] = merkle_obj[:total]
-        mine_this[:merkle_root] = merkle_obj[:merkle_root]
+        mine_this[:total]        = merkle_obj[:total]
+        mine_this[:merkle_root]  = merkle_obj[:merkle_root]
 
-        return mine_this
+        minehash = ""
+        nonce = 0
+        loop do
+            
+            mine_this[:nonce] = nonce
+            minehash = Digest::SHA1.hexdigest(mine_this.to_json)
+
+            nonce = nonce + 1
+
+            if minehash[0..2] == "000"
+                break 
+            end
+        end
+
+        #return mine_this
+        return {
+            :mine_data => mine_this,
+            :minehash => minehash
+        }.to_json
         
-
     end
 
 
@@ -84,7 +101,7 @@ class MinerMine
 
         # hasil akhir ini adalah merkle root!
         return {
-            merkle_root: merkles_arr,
+            merkle_root: merkles_arr[0],
             transaction_count: items.count,
             total: total
         }
