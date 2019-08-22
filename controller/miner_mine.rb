@@ -28,7 +28,7 @@ class MinerMine
         loop do
             
             mine_this[:nonce] = nonce
-            minehash = Digest::SHA1.hexdigest(mine_this.to_json)
+            minehash = Digest::SHA256.hexdigest(mine_this.to_json)
 
             nonce = nonce + 1
 
