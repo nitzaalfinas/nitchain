@@ -51,6 +51,8 @@ end
 # from
 # to
 # amount
+# Flowcharts
+# https://docs.google.com/drawings/d/1Q7IyBFYjyLAcXWH6LIovDMA_A8Ez8ksjOx8-LOZhUs8/edit?usp=sharing
 post '/wallet/transfer' do
     Wallet.transfer(params[:from], params[:to], params[:amount])
 end

@@ -1,5 +1,5 @@
 # nitchain
-NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain menggunakan konsensus Proof of Work dan proyek ini dibuat untuk keperluan riset.
+NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof of Work" and this project is creating for research purposes.
 
 ## Install
 * `bundle install`
@@ -12,3 +12,11 @@ NitChain adalah sebuah proyek blockchain menggunakan bahasa Ruby. NitChain mengg
 
 ## Todo
 * Mine
+
+## Flowcharts
+Reading the code might be very difficult. But by reading the flowchart it is easier to understand.
+### Create address
+### Transfer
+https://docs.google.com/drawings/d/1Q7IyBFYjyLAcXWH6LIovDMA_A8Ez8ksjOx8-LOZhUs8/edit?usp=sharing
+### Pool
+https://docs.google.com/drawings/d/1tDncmAuL5aoGakDyqX0C_pwbzrORy5aAhG5Qm5ZCIxw/edit?usp=sharing
