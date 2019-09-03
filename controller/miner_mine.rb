@@ -1,13 +1,12 @@
 class MinerMine
 
     def self.save_pubkey
-        
+
     end
 
 
-    def self.mine 
+    def self.mine
         
-
         data = {}
         data[:hash] = ""
         data[:nonce] = ""
@@ -26,14 +25,14 @@ class MinerMine
         minehash = ""
         nonce = 0
         loop do
-            
+
             mine_this[:nonce] = nonce
             minehash = Digest::SHA256.hexdigest(mine_this.to_json)
 
             nonce = nonce + 1
 
             if minehash[0..2] == "000"
-                break 
+                break
             end
         end
 
@@ -42,7 +41,7 @@ class MinerMine
             :mine_data => mine_this,
             :minehash => minehash
         }.to_json
-        
+
     end
 
 
@@ -57,12 +56,12 @@ class MinerMine
         # ambil semua data dari pool
         Mongo::Logger.logger.level = ::Logger::FATAL
 
-        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)  
+        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
         items = client[:pools].find({})
 
-        # hitung jumlah data 
+        # hitung jumlah data
         # puts items.count
-        
+
         #puts client[:pools].
 
         # AKTIFKAN LAGI NANTI SETELAH BISA MEMBUAT MERKLE TREE!
@@ -77,7 +76,7 @@ class MinerMine
         #     x[:leaf] = true
         #     client[:merkles].insert_one(x)
         # end
-        
+
         # cari yang sedang di flag untuk membuat merkle
         merkles = client[:merkles].find({"creating_merkle" => true})
         merkles_arr = []
@@ -95,7 +94,7 @@ class MinerMine
             merkles_arr = MinerMine.merkle_proses(merkles_arr)
 
             if merkles_arr.count == 1
-                break 
+                break
             end
         end
 
@@ -132,7 +131,7 @@ class MinerMine
                 # gabungkan hash
                 hash_join = merkles_arr[urut-2] + merkles_arr[urut-1]
 
-                # buat hash baru dari yang sudah digabungkan 
+                # buat hash baru dari yang sudah digabungkan
                 nuhash = Digest::SHA1.hexdigest(hash_join)
 
                 nu_arr.push(nuhash)
