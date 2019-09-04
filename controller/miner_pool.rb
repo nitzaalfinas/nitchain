@@ -1,7 +1,7 @@
 class MinerPool
 
     # == Keterangan
-    # pada submit, data yang didapatkan adalah 
+    # pada submit, data yang didapatkan adalah
     # {
     #     "data":{
     #         "from":"Nx3476e5c2b698c4746bc184f96b47815baa352cc3",
@@ -18,64 +18,70 @@ class MinerPool
 
         obj = JSON.parse(data)
 
-        # from dan to tidak boleh address yang sama
-        if obj["data"]["from"] != obj["data"]["to"]
+        if MinerPool.valid_transaction?(obj) === true
 
-            # cek dulu, apakah address valid
-            if Wallet.valid_address?(obj["data"]["from"]) === true && Wallet.valid_address?(obj["data"]["to"]) === true
+            # from dan to tidak boleh address yang sama
+            if obj["data"]["from"] != obj["data"]["to"]
 
-                if Wallet.valid_address_and_pubkey?(obj["data"]["from"], obj["pubkey"]) === true 
-                    if MinerPool.valid_transaction?(obj) === true 
+                # cek dulu, apakah address valid
+                if Wallet.valid_address?(obj["data"]["from"]) === true && Wallet.valid_address?(obj["data"]["to"]) === true
+
+                    if Wallet.valid_address_and_pubkey?(obj["data"]["from"], obj["pubkey"]) === true
+
+                        # decrypt dulu menggunakan private ke master
+                        private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
+                        string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
+
+                        decrypt_obj = JSON.parse(string_decrypt)
+
+                        # periksa pesan decrypt
+                        if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
+
+                            # periksa signature menggunakan sender public key, apakah benar
+                            sender_public_key = OpenSSL::PKey::RSA.new(obj["pubkey"])
+                            if sender_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(obj["sign"]), string_decrypt) === true
+                                client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+
+                                # jika hash nya ada yang sama, maka tidak boleh insert
+                                if client[:pools].find({"hash" => obj["hash"]}).count == 0
+                                    if client[:pools].insert_one(obj)
+                                        client.close
+                                        return true
+                                    else
+                                        return "ErrDB Pool"
+                                    end
+                                else
+                                    return "Transaction hash exist"
+                                end
+                            else
+                                return "Signature is not match"
+                            end
+                        else
+                            return "Data is not match"
+                        end
+
+                        # here is valid transaction.
+                        # below line gonna inform the user about the status of his/her transfer
                         return {success: true, data: obj["hash"]}.to_json
+
                     else
-                        return {success: fail, msg: MinerPool.valid_transaction?(obj) }.to_json
+                        return {success: fail, msg: "Fail. Not public key and address not match!" }.to_json
                     end
-                else 
-                    return {success: fail, msg: "Fail. Not public key and address not match!" }.to_json
+                else
+                    return {success: fail, msg: "Fail. Address is not valid" }.to_json
                 end
-            else 
-                return {success: fail, msg: "Fail. Address is not valid" }.to_json
+            else
+                return {success: fail, msg: "Fail. From and to can't be the same" }.to_json
             end
         else
-            return {success: fail, msg: "Fail. From and to can't be the same" }.to_json
+            return {success: fail, msg: MinerPool.valid_transaction?(obj) }.to_json
         end
     end
 
     def self.valid_transaction?(obj)
         if (obj["data"]["from"] && obj["data"]["from"] != "") && (obj["data"]["to"] && obj["data"]["to"] != "") && (obj["data"]["amount"] && obj["data"]["amount"] != "") && (obj["data"]["time"] && obj["data"]["time"] != "") && (obj["hash"] && obj["hash"] != "") && (obj["enc"] && obj["enc"] != "") && (obj["sign"] && obj["sign"] != "") && (obj["pubkey"] && obj["pubkey"] != "")
-
-            # decrypt dulu menggunakan private ke master
-            private_key = OpenSSL::PKey::RSA.new(File.read("#{MAIN_CONFIG_PATH}/main_privkey"))
-            string_decrypt = private_key.private_decrypt(Base64.decode64(obj["enc"]))
-
-            decrypt_obj = JSON.parse(string_decrypt)
-
-            # periksa pesan decrypt
-            if decrypt_obj["from"] == obj["data"]["from"] && decrypt_obj["to"] == obj["data"]["to"] && decrypt_obj["amount"] == obj["data"]["amount"] && decrypt_obj["time"] == obj["data"]["time"]
-
-                # periksa signature menggunakan sender public key, apakah benar
-                sender_public_key = OpenSSL::PKey::RSA.new(obj["pubkey"])
-                if sender_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(obj["sign"]), string_decrypt) === true
-                    client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)  
-
-                    # jika hash nya ada yang sama, maka tidak boleh insert
-                    if client[:pools].find({"hash" => obj["hash"]}).count == 0
-                        if client[:pools].insert_one(obj)
-                            client.close
-                            return true
-                        else 
-                            return "ErrDB Pool"
-                        end
-                    else 
-                        return "Transaction hash exist"
-                    end
-                else 
-                    return "Signature is not match"
-                end
-            else
-                return "Data is not match"
-            end
-        else 
+            return true
+        else
             return "Wrong input!"
         end
     end
