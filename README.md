@@ -20,3 +20,5 @@ Reading the code might be very difficult. But by reading the flowchart it is eas
 https://docs.google.com/drawings/d/1Q7IyBFYjyLAcXWH6LIovDMA_A8Ez8ksjOx8-LOZhUs8/edit?usp=sharing
 ### Pool
 https://docs.google.com/drawings/d/1tDncmAuL5aoGakDyqX0C_pwbzrORy5aAhG5Qm5ZCIxw/edit?usp=sharing
+### Mine
+https://docs.google.com/drawings/d/10BSFAL-9VMh07_9qAVxPb5L8VDsL7HVUg9b1FVPDQ5E/edit?usp=sharing

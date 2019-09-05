@@ -4,9 +4,8 @@ class MinerMine
 
     end
 
-
     def self.mine
-        
+
         data = {}
         data[:hash] = ""
         data[:nonce] = ""
@@ -140,4 +139,6 @@ class MinerMine
 
         return nu_arr
     end
+
+    
 end
