@@ -33,18 +33,18 @@ end
 
 zz = 0
 loop do
-    
+
     zz = zz + 1
-    puts "======= zz #{zz}" 
+    puts "======= zz #{zz}"
 
     merkles_arr = jalan(merkles_arr)
 
     puts "merkle_arr"
     puts merkles_arr.to_s
     puts merkles_arr.count
-    
+
     if merkles_arr.count == 1
-        break 
+        break
     end
 end
 
