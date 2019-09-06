@@ -1,4 +1,4 @@
-# nitchain
+# nitchain (early stage development)
 NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof of Work" and this project is creating for research purposes.
 
 ## Install
@@ -11,7 +11,7 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 `rspec spec/main_spec.rb`
 
 ## Todo
-* Mine
+* Sync
 
 ## Flowcharts
 Reading the code might be very difficult. But by reading the flowchart it is easier to understand.
