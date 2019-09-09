@@ -1,3 +1,6 @@
+#
+# cv = chain validation
+
 class Blockchain
 
     def self.add(data)
@@ -7,17 +10,23 @@ class Blockchain
 
             if Blockchain.cv_incoming_prevhash_and_db_lasthash_match(incoming_block)[:success] === true
 
-                if Blockchain.cv_b_hash_and_data(incoming_block) === true
+                if Blockchain.cv_b_hash_and_data(incoming_block)[:success] === true
 
-                    return {
-                        success: true,
-                        msg: "!"
-                    }
+                    if Blockchain.cv_transaction_count(incoming_block)[:success] == true
+
+                        if Blockchain.cv_total_amount(incoming_block)[:success] == true
+                            return {
+                                success: true,
+                                msg: "!"
+                            }
+                        else
+                            return Blockchain.cv_total_amount(incoming_block)
+                        end
+                    else
+                        return Blockchain.cv_transaction_count(incoming_block)
+                    end
                 else
-                    return {
-                        success: false,
-                        msg: "Hash and data is not match!"
-                    }
+                    return Blockchain.cv_b_hash_and_data(incoming_block)
                 end
             else
                 return Blockchain.cv_incoming_prevhash_and_db_lasthash_match(incoming_block)
@@ -39,9 +48,9 @@ class Blockchain
         dataz = Digest::SHA256.hexdigest(dataobj["data"].to_json)
 
         if dataz === thehash
-            return true
+            return {success: true, msg: "hashing(data) == hash"}
         else
-            return false
+            return {success: false, msg: "hashing(data) != hash"}
         end
     end
 
@@ -207,4 +216,50 @@ class Blockchain
         end
     end
 
+    # == Keterangan
+    # untuk mencocokkan jumlah transaksi
+    def self.cv_transaction_count(incoming_block)
+        obj = incoming_block
+
+        if obj["data"]["tcount"] === obj["data"]["txs"].count
+            if obj["data"]["tcount"] === obj["data"]["txds"].count
+                return {success: true, msg: "transaction count is valid"}
+            else
+                return {success: false, msg: "transaction count is not match (2)"}
+            end
+        else
+            return {success: false, msg: "transaction count is not match (1)"}
+        end
+    end
+
+    # == Keterangan
+    # Untuk mencocokkan jumlah yang ikut pada transaksi ini
+    # - Cek data["tamount"]
+    # - ambil data["reward"]
+    # - jumlahkan semua pada data[outputs], apakah ini cocok dengan data[tamount]
+    # - jumlahkan semua pada data[txds][outputs] + reward, apakah ini cocok dengan data[tamount]
+    def self.cv_total_amount(incoming_block)
+        obj = incoming_block
+
+        total_ouputs = obj["data"]["outputs"].sum { |f| f["balance"] }
+
+        if total_ouputs === obj["data"]["tamount"]
+
+            # jumlahkan semua yang ada pada transaksi
+            total_tx_outputs = 0
+            obj["data"]["txds"].each do |f|
+                total_tx_outputs = total_tx_outputs + f["tx"]["outputs"].sum { |kk| kk["balance"] }
+            end
+
+            total_tx_outputs_and_reward = total_tx_outputs + obj["data"]["reward"]
+
+            if total_tx_outputs_and_reward === obj["data"]["tamount"]
+                return {success: true, msg: "total amount match"}
+            else
+                return {success: false, msg: "total amount is not match (2)"}
+            end
+        else
+            return {success: false, msg: "total amount is not match (1)"}
+        end
+    end
 end
