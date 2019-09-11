@@ -61,6 +61,12 @@ class TestBlock < Test::Unit::TestCase
         return data
     end
 
+    test "valid genesis" do
+        block = '{"hash":"00098842e28e66e4c574eedf9d164b21c71e64d4fbd2dc6db9ea7b977b52438c","data":{"num":1,"prevhash":"","tcount":1,"tamount":1000000050,"diff":3,"mroot":"78e9d579065c460d2fc690086481a31a586788bc48478e4af0a4250827f3cc95","miner":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","reward":50,"txs":["f1f04416449e91f43231322244a9a39ff642480e2168d3842fa639c912d1be11"],"txds":[{"hash":"f1f04416449e91f43231322244a9a39ff642480e2168d3842fa639c912d1be11","pubkey":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwunW9qbYH+KnXpxEu8w\niLiZSN2s1o21z7KG9w8k+xsbTYJ+BfGPEYKnP34eKN+5pp7lo+Uvfd/NIeO2c/gs\nzsc9iZ3mjuJAxdMArirpptac5bdR77/jSmL6hws1uuvaX+SC/5LziwjbSOZn/xl7\nBlsYMRmreVJJyTbBoMeewYXYJ+zBKBsJjo/nHf1cRrlB2nMX1IahW7uE7nJaVT72\nvdCMR1Dq418StJX6hN8qG3xR6f1KWtTHqKl2Ykdi+l6pKYK8GOO+3RpRGadvDluo\nIfcQGdcE3IsRWYwrReMIt/GgjfhxNIi1nac6+ASrNtMv2UAX567h7mMeliJ4fO5j\ngwIDAQAB\n-----END PUBLIC KEY-----\n","sign":"CDheM0kRnV+G6mQfgaVtqh6gyoUYpBUor6GiUVj/gxzkMsmAFMJO5xiR8+Ia\nKcdYFQuBAJRGclJiFKTzF0ghaGHAeL7ZJ2drBDS0HB3dir5tbO+71RZrUn5Y\nUR9wuGL6+OEGfRfkXAzhOLgdoi3ju+k0FxBHWfJwF/4CqnWdlnGjOud564fs\nOtn8dSbNePbEywzFYvGgmKH9+PVCF4d70j10ExXT4coM5uZnE1fA8yYVtYxh\nRL+SL4yghbNciCRvHUnqxy3qQYEtmvidlLe9RU3X/q3+MSTSXvYogk17sBBX\nivrQ2Ptz4qgBfvii0fh5kpiq8MW+Yie/u601wKHT6g==\n","tx":{"input":{"balance":1000000000,"from":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":1000000000,"fee":0,"data":{}},"outputs":[{"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":1000000000}],"time":1567676889}}],"outputs":[{"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":1000000050}],"time":1567743389,"nonce":304}}'
+
+        assert_equal(true, Block.validation(block)[:success])
+    end
+
     test "valid block" do
 
         block = block_data.to_json

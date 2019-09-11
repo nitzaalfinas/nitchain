@@ -9,15 +9,18 @@ keyobj = JSON.parse(@keyjson)
 zz = {}
 
 zz[:input] = {}
-zz[:input][:from] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
 zz[:input][:balance] = 1000000000
+zz[:input][:from] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
 zz[:input][:to] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
 zz[:input][:amount] = 1000000000
+zz[:input][:fee] = 0
+zz[:input][:data] = {}
 
 zz[:outputs] = []
 zz[:outputs][0] = {}
 zz[:outputs][0][:address] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
 zz[:outputs][0][:balance] = 1000000000
+
 
 # kunci pada date time ini
 zz[:time] = 1567676889
@@ -44,6 +47,7 @@ storedata[:hash] = thehash
 storedata[:pubkey] = keyobj["pubkey"]
 storedata[:sign] = signature
 storedata[:tx] = zz
+
 
 puts ""
 puts ">>> simpan dalam transactions"
@@ -99,8 +103,8 @@ end
 
 puts ""
 puts ">>> simpan dalam blockchains[0] data"
-puts block[:data].to_json
-
-puts ""
-puts ">>> simpan dalam blockchains[0] hash"
-puts minehash
+akhir = {
+    hash: minehash,
+    data: block[:data]
+}
+puts akhir.to_json
