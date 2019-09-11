@@ -13,6 +13,9 @@ class Block
 
 
     def self.validation(block)
+
+        block = JSON.parse(block)
+
         if Block.checking_data_structure(block)[:success] == true
 
             if Block.checking_hash_and_data(block)[:success] === true
@@ -22,15 +25,20 @@ class Block
                     if Block.checking_total_amount(block)[:success] == true
 
                         if Block.checking_difficulty(block)[:success] == true
-                            return {
-                                success: true,
-                                msg: "!"
-                            }
+
+                            if Block.checking_merkle(block)[:success] == true
+
+                                return {
+                                    success: true
+                                }
+                            else
+                                return Block.checking_merkle(block)
+                            end
                         else
-                            return Block.checking_difficulty(incoming_block)
+                            return Block.checking_difficulty(block)
                         end
                     else
-                        return Block.checking_total_amount(incoming_block)
+                        return Block.checking_total_amount(block)
                     end
                 else
                     return Block.checking_transaction_count(block)
@@ -43,8 +51,7 @@ class Block
         end
     end
 
-    private
-
+    ##
     # == Keterangan
     # - apakah punya hash?
     # - apakah punya data[:num]?
@@ -258,6 +265,13 @@ class Block
     end
 
     def self.checking_merkle(block)
-        
+        merkle_root_from_tx = Merkle.create(block["data"]["txs"])
+        merkle_root_in_data = block["data"]["mroot"]
+
+        if merkle_root_from_tx === merkle_root_in_data
+            return {success: true, msg: "valid merkle root"}
+        else
+            return {success: false, msg: "invalid merkle root"}
+        end
     end
 end
