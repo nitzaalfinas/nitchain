@@ -41,8 +41,6 @@ puts signature
 
 storedata = {}
 storedata[:hash] = thehash
-storedata[:from] = zz[:input][:from]
-storedata[:to] = zz[:input][:to]
 storedata[:pubkey] = keyobj["pubkey"]
 storedata[:sign] = signature
 storedata[:tx] = zz

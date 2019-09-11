@@ -1,6 +1,7 @@
 require 'openssl'
 require 'json'
 require "test/unit"
+require 'awesome_print'
 
 ENV = "test"
 
@@ -20,7 +21,7 @@ class TestTransaction < Test::Unit::TestCase
         # data harus berupa json
         datainput_json = datainput.to_json
 
-        puts Transaction.create(datainput_json)
+         puts Transaction.create(datainput_json).to_json
 
     end
 
