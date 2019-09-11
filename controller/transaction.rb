@@ -145,15 +145,37 @@ class Transaction
     #     }
     # }
     def self.validation(txdata)
-        if txdata["hash"] && txdata["pubkey"] && txdata["sign"] && txdata["tx"] && txdata["tx"]["input"] && txdata["tx"]["input"]["balance"] && txdata["tx"]["input"]["from"] && txdata["tx"]["input"]["to"] && txdata["tx"]["input"]["amount"] && txdata["tx"]["input"]["fee"] && txdata["tx"]["input"]["data"] && txdata["tx"]["outputs"]
 
+        if txdata["hash"] && txdata["pubkey"] && txdata["sign"] && txdata["tx"] && txdata["tx"]["input"] && txdata["tx"]["input"]["balance"] && txdata["tx"]["input"]["from"] && txdata["tx"]["input"]["to"] && txdata["tx"]["input"]["amount"] && txdata["tx"]["input"]["fee"] && txdata["tx"]["input"]["data"] && txdata["tx"]["outputs"] && txdata["tx"]["time"]
 
+            # compare hash and tx-in-json
+            if txdata["hash"] === Digest::SHA256.hexdigest(txdata["tx"].to_json.to_s)
 
+                # check apakah address from dan address to valid?
+                if Wallet.validation_address_format(txdata["tx"]["input"]["from"])[:success] === true && Wallet.validation_address_format(txdata["tx"]["input"]["to"])[:success] === true
+
+                    # check apakah sha1 pubkey sama dengan from
+                    if "Nx#{Digest::SHA1.hexdigest(txdata["pubkey"])}" === txdata["tx"]["input"]["from"]
+
+                        # check apakah amount transaction
+                        if (txdata["tx"]["input"]["balance"] - txdata["tx"]["input"]["fee"]) === (txdata["tx"]["outputs"][0]["balance"] + txdata["tx"]["outputs"][1]["balance"])
+                            return {success: true}
+                        else
+                            return {success: false, msg: "invalid amount"}
+                        end
+                    else
+                        return {success: false, msg: "invalid comparison address from and public key"}
+                    end
+                else
+                    return {success: false, msg: "invalid address from or to"}
+                end
+            else
+                return {success: false, msg: "invalid comparison hash and tx"}
+            end
         else
             return {success: false, msg: "invalid transaction format"}
         end
     end
 
-    
 
 end
