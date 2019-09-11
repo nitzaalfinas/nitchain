@@ -10,7 +10,7 @@ class Blockchain
         if Block.validation(incoming_block)[:success] === true
 
             if Blockchain.cv_incoming_prevhash_and_db_lasthash_match(incoming_block)[:success] === true
-                
+
                 return {success: true, msg: "block added"}
             else
                 return Blockchain.cv_incoming_prevhash_and_db_lasthash_match(incoming_block)
@@ -20,6 +20,8 @@ class Blockchain
         end
 
     end
+
+    private
 
     # == Keterangan
     # - Diambil dulu dari database untuk hash terakhir

@@ -256,4 +256,8 @@ class Block
             return {success: false, msg: "invalid difficulty"}
         end
     end
+
+    def self.checking_merkle(block)
+        
+    end
 end

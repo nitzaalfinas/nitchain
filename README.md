@@ -12,7 +12,6 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 
 ## Todo
 * Sync
-    * checking difficulty == leading zero in hash
     * checking merkle root
         * checking txs and txds
             * sorting

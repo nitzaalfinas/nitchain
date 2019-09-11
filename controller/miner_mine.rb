@@ -140,5 +140,5 @@ class MinerMine
         return nu_arr
     end
 
-    
+
 end
