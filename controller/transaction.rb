@@ -17,14 +17,73 @@ class Transaction
     def self.create(datainput)
         data = JSON.parse(datainput)
 
-        if Wallet.validation_key_and_get_pubkey(data["from"])[:success] === true
-            return {success: true}
-        else
-            return Wallet.validation_key_and_get_pubkey(data["from"])
-        end
-    end
+        if Wallet.validation_address_format(data["from"])[:success] === true && Wallet.validation_address_format(data["to"])[:success] === true
 
-    def self.create_find_last_balance()
+            if Wallet.validation_key_and_get_pubkey(data["from"])[:success] === true
+
+                my_key_data = Wallet.get_data_key_and_content_validation(data["from"])
+
+                from__balance_start = Wallet.balance(data["from"])[:data][:balance]
+                txfee = 5
+
+                from__output_balance = from__balance_start - (data["amount"] + txfee)
+
+                if from__output_balance > 0
+
+                    to__balance_start = Wallet.balance(data["to"])[:data][:balance]
+                    to__output_balance = to__balance_start + data["amount"]
+
+                    if to__output_balance > 0
+
+                        datasend = {
+                            input: {
+                                balance: from__balance_start,
+                                from: data["from"],
+                                to: data["to"],
+                                amount: data["amount"],
+                                fee: txfee
+                            },
+                            outputs: [
+                                { address: data["from"], balance: from__output_balance },
+                                { address: data["to"], balance: to__output_balance }
+                            ],
+                            time: Time.now.utc.to_i
+                        }
+
+                        # txhash
+                        txhash = Digest::SHA256.hexdigest(datasend.to_json.to_s)
+
+                        # my public key
+                        my_pubkey = my_key_data[:data][:pubkey]
+
+                        # my private key
+                        my_privkey_text = my_key_data[:data][:privkey]
+
+                        # sign message
+                        my_privkey = OpenSSL::PKey::RSA.new(my_privkey_text)
+                        signature = Base64.encode64( my_privkey.sign(OpenSSL::Digest::SHA256.new, datasend.to_json.to_s) )
+
+                        return {
+                            success: true,
+                            data: {
+                                hash: txhash,
+                                pubkey: my_pubkey,
+                                sign: signature,
+                                tx: datasend
+                            }
+                        }
+                    else
+                        return {success: false, msg: "To balance can't be below 0"}
+                    end
+                else
+                    return {success: false, msg: "From balance is not enough"}
+                end
+            else
+                return Wallet.validation_key_and_get_pubkey(data["from"])
+            end
+        else
+            return Wallet.validation_address_format(data["from"])
+        end
     end
 
     ##

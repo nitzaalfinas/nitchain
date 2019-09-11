@@ -22,10 +22,6 @@ class Blockchain
         end
     end
 
-    def self.balance_find(address)
-
-    end
-
     private
 
     # == Keterangan
