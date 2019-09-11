@@ -10,6 +10,8 @@ ENV = "test"
 
 require_relative '../../controller/block'
 require_relative '../../controller/merkle'
+require_relative '../../controller/transaction'
+require_relative '../../controller/wallet'
 
 class TestBlock < Test::Unit::TestCase
 
@@ -39,7 +41,9 @@ class TestBlock < Test::Unit::TestCase
                                 "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                                 "balance": 999900100,
                                 "to": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                                "amount": 200000
+                                "amount": 200000,
+                                "fee": 5,
+                                "data": {}
                             },
                             "outputs": [
                                 { "address": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f", "balance": 999700100 },
@@ -62,7 +66,7 @@ class TestBlock < Test::Unit::TestCase
     end
 
     test "valid genesis" do
-        block = '{"hash":"00098842e28e66e4c574eedf9d164b21c71e64d4fbd2dc6db9ea7b977b52438c","data":{"num":1,"prevhash":"","tcount":1,"tamount":1000000050,"diff":3,"mroot":"78e9d579065c460d2fc690086481a31a586788bc48478e4af0a4250827f3cc95","miner":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","reward":50,"txs":["f1f04416449e91f43231322244a9a39ff642480e2168d3842fa639c912d1be11"],"txds":[{"hash":"f1f04416449e91f43231322244a9a39ff642480e2168d3842fa639c912d1be11","pubkey":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwunW9qbYH+KnXpxEu8w\niLiZSN2s1o21z7KG9w8k+xsbTYJ+BfGPEYKnP34eKN+5pp7lo+Uvfd/NIeO2c/gs\nzsc9iZ3mjuJAxdMArirpptac5bdR77/jSmL6hws1uuvaX+SC/5LziwjbSOZn/xl7\nBlsYMRmreVJJyTbBoMeewYXYJ+zBKBsJjo/nHf1cRrlB2nMX1IahW7uE7nJaVT72\nvdCMR1Dq418StJX6hN8qG3xR6f1KWtTHqKl2Ykdi+l6pKYK8GOO+3RpRGadvDluo\nIfcQGdcE3IsRWYwrReMIt/GgjfhxNIi1nac6+ASrNtMv2UAX567h7mMeliJ4fO5j\ngwIDAQAB\n-----END PUBLIC KEY-----\n","sign":"CDheM0kRnV+G6mQfgaVtqh6gyoUYpBUor6GiUVj/gxzkMsmAFMJO5xiR8+Ia\nKcdYFQuBAJRGclJiFKTzF0ghaGHAeL7ZJ2drBDS0HB3dir5tbO+71RZrUn5Y\nUR9wuGL6+OEGfRfkXAzhOLgdoi3ju+k0FxBHWfJwF/4CqnWdlnGjOud564fs\nOtn8dSbNePbEywzFYvGgmKH9+PVCF4d70j10ExXT4coM5uZnE1fA8yYVtYxh\nRL+SL4yghbNciCRvHUnqxy3qQYEtmvidlLe9RU3X/q3+MSTSXvYogk17sBBX\nivrQ2Ptz4qgBfvii0fh5kpiq8MW+Yie/u601wKHT6g==\n","tx":{"input":{"balance":1000000000,"from":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":1000000000,"fee":0,"data":{}},"outputs":[{"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":1000000000}],"time":1567676889}}],"outputs":[{"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":1000000050}],"time":1567743389,"nonce":304}}'
+        block = '{"hash":"00084a9049395be1e5e7400d39b48bc854d410c80134932ff196c911b6b3872d","data":{"num":1,"prevhash":"","tcount":1,"tamount":1000000050,"diff":3,"mroot":"8519950eab1d0649f314f8c96da5737f2e9c19a8f6fe02e2ce351e207fee6b5c","miner":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","reward":50,"txs":["d9dec8b533cb0c3946969d8ede66709d65d289b5b6b0dd175fc1880a23f55dee"],"txds":[{"hash":"d9dec8b533cb0c3946969d8ede66709d65d289b5b6b0dd175fc1880a23f55dee","pubkey":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwunW9qbYH+KnXpxEu8w\niLiZSN2s1o21z7KG9w8k+xsbTYJ+BfGPEYKnP34eKN+5pp7lo+Uvfd/NIeO2c/gs\nzsc9iZ3mjuJAxdMArirpptac5bdR77/jSmL6hws1uuvaX+SC/5LziwjbSOZn/xl7\nBlsYMRmreVJJyTbBoMeewYXYJ+zBKBsJjo/nHf1cRrlB2nMX1IahW7uE7nJaVT72\nvdCMR1Dq418StJX6hN8qG3xR6f1KWtTHqKl2Ykdi+l6pKYK8GOO+3RpRGadvDluo\nIfcQGdcE3IsRWYwrReMIt/GgjfhxNIi1nac6+ASrNtMv2UAX567h7mMeliJ4fO5j\ngwIDAQAB\n-----END PUBLIC KEY-----\n","sign":"Llr3rs+NeUFor0o4ledioJ5hgKW60eXSR6J6OIeF1yEY1trzP7MxC8Pi+EUW\nG/6On5Zqru3BzJ/V20W5XTRt3StXydUrsUnSOkHgZk0b3SbEGeabjrgook/f\n7CZ6qvOo5E2PHcbda0BcnLqdt8hpAwd6sYF1bz7obb8IQlZm9m/Q8mw9PEM1\n+avDhff61Vyi60H6Uty8uTxtJVV9yMzViZvBVQnNkLQXzX4NBmXEqs6VjHNg\nBdlqz6JEVqLNs2ZBDurW1/y/vUY/myZ8YeW2fWA1W/3Y0yg5uvlGQEKuHcuW\n8nPTda52i9kl9q4C4t1CpPhC/d966Z9Lat+R0ucS4w==\n","tx":{"input":{"balance":1000000000,"from":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","to":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","amount":1000000000,"fee":0,"data":{}},"outputs":[{"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":0},{"address":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","balance":1000000000}],"time":1567676889}}],"outputs":[{"address":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","balance":1000000050}],"time":1567743389,"nonce":5600}}'
 
         assert_equal(true, Block.validation(block)[:success])
     end
@@ -70,6 +74,8 @@ class TestBlock < Test::Unit::TestCase
     test "valid block" do
 
         block = block_data.to_json
+
+        puts Block.validation(block).to_yaml
 
         # block yang diberikan adalah valid
         assert_equal(true, Block.validation(block)[:success])
@@ -110,16 +116,16 @@ class TestBlock < Test::Unit::TestCase
         block_obj[:data][:txds] = [
             {
                 "hash": "e358ac153c05ddf8842da698e151d1147f895258862f4485cd3644a7378e2027",
-                "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
-                "to": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
                 "pubkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n",
                 "sign": "MIuDG8b+T32nFKYBs3HY7UXokuwIQ3PfMduxx5oQATaaxTVnJVP7RXe6Xkhr\nR+SWjQ9yDWxoE9lmaFROHCR6VjfFSM+LtQ9uktRyhCuRLVIGEII4f8RWSgMg\nTVssCCjim8sc8JSHp7V88XOmnwOduCdQQDGvqRDvdHvOJ/Bk4kgycInByEjY\nQQI9vqtRMige+6qbP9eOteRG7rl3/D9v85fCy33bTIANVdibwPQtNd/pwOYE\nnaduWMRNkicdLooUfJsNt4yPSi12MX/mxUpmft3aMw7EB48ePJ9OoJHOcIT+\nLb/Ja6Y9xm1QuOCTxlOscW4C+jfMEyGHQij67DfA3w==\n",
                 "tx": {
                     "input": {
-                        "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "balance": 999900100,
+                        "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "to": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                        "amount": 200000
+                        "amount": 200000,
+                        "fee": 5,
+                        "data": {}
                     },
                     "outputs": [
                         { "address": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f", "balance": 999700100 },
@@ -130,16 +136,16 @@ class TestBlock < Test::Unit::TestCase
             },
             {
                 "hash": "e358ac153c05ddf8842da698e151d1147f895258862f4485cd3644a7378e2027",
-                "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
-                "to": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
                 "pubkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n",
                 "sign": "MIuDG8b+T32nFKYBs3HY7UXokuwIQ3PfMduxx5oQATaaxTVnJVP7RXe6Xkhr\nR+SWjQ9yDWxoE9lmaFROHCR6VjfFSM+LtQ9uktRyhCuRLVIGEII4f8RWSgMg\nTVssCCjim8sc8JSHp7V88XOmnwOduCdQQDGvqRDvdHvOJ/Bk4kgycInByEjY\nQQI9vqtRMige+6qbP9eOteRG7rl3/D9v85fCy33bTIANVdibwPQtNd/pwOYE\nnaduWMRNkicdLooUfJsNt4yPSi12MX/mxUpmft3aMw7EB48ePJ9OoJHOcIT+\nLb/Ja6Y9xm1QuOCTxlOscW4C+jfMEyGHQij67DfA3w==\n",
                 "tx": {
                     "input": {
-                        "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "balance": 999900100,
+                        "from": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "to": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                        "amount": 200000
+                        "amount": 200000,
+                        "fee": 5,
+                        "data": {}
                     },
                     "outputs": [
                         { "address": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f", "balance": 999700100 },

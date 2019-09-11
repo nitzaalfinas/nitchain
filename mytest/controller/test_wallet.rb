@@ -12,7 +12,7 @@ class TestWallet < Test::Unit::TestCase
     # SEBAIKNYA INI DITEST MANUAL
     test "def balance" do
 
-        puts ap Wallet.balance("Nxf154127e23cde0c8ecbaa8b943aff970c60c590f")
+        puts Wallet.balance("Nxf154127e23cde0c8ecbaa8b943aff970c60c590f").to_yaml
     end
 
 

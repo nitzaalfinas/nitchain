@@ -159,6 +159,7 @@ class Transaction
 
                         # check apakah amount transaction
                         if (txdata["tx"]["input"]["balance"] - txdata["tx"]["input"]["fee"]) === (txdata["tx"]["outputs"][0]["balance"] + txdata["tx"]["outputs"][1]["balance"])
+
                             return {success: true}
                         else
                             return {success: false, msg: "invalid amount"}
