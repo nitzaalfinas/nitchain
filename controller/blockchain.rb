@@ -15,10 +15,15 @@ class Blockchain
                     if Blockchain.cv_transaction_count(incoming_block)[:success] == true
 
                         if Blockchain.cv_total_amount(incoming_block)[:success] == true
-                            return {
-                                success: true,
-                                msg: "!"
-                            }
+
+                            if Blockchain.cv_difficulty(incoming_block)[:success] == true
+                                return {
+                                    success: true,
+                                    msg: "!"
+                                }
+                            else
+                                return Blockchain.cv_difficulty(incoming_block)
+                            end
                         else
                             return Blockchain.cv_total_amount(incoming_block)
                         end
@@ -260,6 +265,16 @@ class Blockchain
             end
         else
             return {success: false, msg: "total amount is not match (1)"}
+        end
+    end
+
+    def self.cv_difficulty(incoming_block)
+        obj = incoming_block
+
+        if obj["hash"][0..(obj["data"]["diff"] - 1)] == "0" * obj["data"]["diff"]
+            return {success: true, msg: "valid difficulty"}
+        else
+            return {success: false, msg: "invalid difficulty"}
         end
     end
 end
