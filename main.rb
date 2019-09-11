@@ -10,6 +10,7 @@ require_relative 'env'
 require_relative 'controller/wallet'
 require_relative 'controller/miner_pool'
 require_relative 'controller/miner_mine'
+require_relative 'controller/block'
 require_relative 'controller/blockchain'
 
 redis = Redis.new(host: "localhost", port: 4011)

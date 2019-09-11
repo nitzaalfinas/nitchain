@@ -17,24 +17,24 @@ class Block
 
             if Block.checking_hash_and_data(block)[:success] === true
 
-                # if Blockchain.cv_transaction_count(incoming_block)[:success] == true
-                #
-                #     if Blockchain.cv_total_amount(incoming_block)[:success] == true
-                #
-                #         if Blockchain.cv_difficulty(incoming_block)[:success] == true
-                #             return {
-                #                 success: true,
-                #                 msg: "!"
-                #             }
-                #         else
-                #             return Blockchain.cv_difficulty(incoming_block)
-                #         end
-                #     else
-                #         return Blockchain.cv_total_amount(incoming_block)
-                #     end
-                # else
-                #     return Blockchain.cv_transaction_count(incoming_block)
-                # end
+                if Block.checking_transaction_count(block)[:success] == true
+
+                    if Block.checking_total_amount(block)[:success] == true
+
+                        if Block.checking_difficulty(block)[:success] == true
+                            return {
+                                success: true,
+                                msg: "!"
+                            }
+                        else
+                            return Block.checking_difficulty(incoming_block)
+                        end
+                    else
+                        return Block.checking_total_amount(incoming_block)
+                    end
+                else
+                    return Block.checking_transaction_count(block)
+                end
             else
                 return Block.checking_hash_and_data(block)
             end
@@ -197,6 +197,63 @@ class Block
             return {success: true, msg: "hashing(data) == hash"}
         else
             return {success: false, msg: "hashing(data) != hash"}
+        end
+    end
+
+    # == Keterangan
+    # untuk mencocokkan jumlah transaksi
+    def self.checking_transaction_count(block)
+        obj = block
+
+        if obj["data"]["tcount"] === obj["data"]["txs"].count
+            if obj["data"]["tcount"] === obj["data"]["txds"].count
+                return {success: true, msg: "transaction count is valid"}
+            else
+                return {success: false, msg: "transaction count is not match (2)"}
+            end
+        else
+            return {success: false, msg: "transaction count is not match (1)"}
+        end
+    end
+
+    # == Keterangan
+    # Untuk mencocokkan jumlah yang ikut pada transaksi ini
+    # - Cek data["tamount"]
+    # - ambil data["reward"]
+    # - jumlahkan semua pada data[outputs], apakah ini cocok dengan data[tamount]
+    # - jumlahkan semua pada data[txds][outputs] + reward, apakah ini cocok dengan data[tamount]
+    def self.checking_total_amount(block)
+        obj = block
+
+        total_ouputs = obj["data"]["outputs"].sum { |f| f["balance"] }
+
+        if total_ouputs === obj["data"]["tamount"]
+
+            # jumlahkan semua yang ada pada transaksi
+            total_tx_outputs = 0
+            obj["data"]["txds"].each do |f|
+                total_tx_outputs = total_tx_outputs + f["tx"]["outputs"].sum { |kk| kk["balance"] }
+            end
+
+            total_tx_outputs_and_reward = total_tx_outputs + obj["data"]["reward"]
+
+            if total_tx_outputs_and_reward === obj["data"]["tamount"]
+                return {success: true, msg: "total amount match"}
+            else
+                return {success: false, msg: "total amount is not match (2)"}
+            end
+        else
+            return {success: false, msg: "total amount is not match (1)"}
+        end
+    end
+
+    def self.checking_difficulty(block)
+        obj = block
+
+        if obj["hash"][0..(obj["data"]["diff"] - 1)] == "0" * obj["data"]["diff"]
+            return {success: true, msg: "valid difficulty"}
+        else
+            return {success: false, msg: "invalid difficulty"}
         end
     end
 end
