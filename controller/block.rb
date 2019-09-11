@@ -1,3 +1,5 @@
+require_relative "env"
+
 class Block
     attr_accessor :hash, :data
 

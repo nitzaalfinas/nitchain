@@ -1,3 +1,5 @@
+require_relative "env"
+
 class WalletOld
 
     def self.create

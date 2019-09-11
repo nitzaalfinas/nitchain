@@ -6,6 +6,8 @@ require 'base64'
 require 'mongo'
 require 'redis'
 
+ENV = "test"
+
 require_relative '../../controller/block'
 require_relative '../../controller/merkle'
 

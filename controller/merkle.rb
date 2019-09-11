@@ -1,3 +1,5 @@
+require_relative "env"
+
 class Merkle
 
     def self.create(array_of_hash)

@@ -2,8 +2,8 @@ require 'openssl'
 require 'json'
 require "test/unit"
 
+ENV = "test"
 
-require_relative 'env'
 require_relative '../../controller/wallet'
 require_relative '../../controller/transaction'
 

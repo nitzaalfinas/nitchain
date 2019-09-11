@@ -1,3 +1,5 @@
+require_relative "env"
+
 class MinerPool
 
     # == Keterangan

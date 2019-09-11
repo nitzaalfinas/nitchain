@@ -1,6 +1,8 @@
 require 'openssl'
 require "test/unit"
 
+ENV = "test"
+
 require_relative '../../controller/merkle'
 
 class TestMerkle < Test::Unit::TestCase

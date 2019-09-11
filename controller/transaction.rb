@@ -1,3 +1,5 @@
+require_relative "env"
+
 class Transaction
 
     attr_accessor :hash, :tx

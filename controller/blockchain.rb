@@ -1,3 +1,5 @@
+require_relative "env"
+
 #
 # cv = chain validation
 
@@ -18,6 +20,9 @@ class Blockchain
         else
             return Block.validation(incoming_block)
         end
+    end
+
+    def self.balance_find(address)
 
     end
 

@@ -1,3 +1,5 @@
+require_relative "env"
+
 class Wallet
 
     # HANYA DIGUNAKAN UNTUK VALIDASI SENDER KARENA INI BERBAHAYA JIKA KEY LEAK
