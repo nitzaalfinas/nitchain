@@ -1,5 +1,30 @@
 class Transaction
 
+    attr_accessor :hash, :tx
+
+    def initialize(hash, tx)
+        @hash = hash
+        @tx = tx
+    end
+
+    ##
+    # == Keterangan
+    # Creating transaction from json data
+    # == Params
+    # tx = hash
+    def self.create(datainput)
+        data = JSON.parse(datainput)
+
+        if Wallet.validation_key_and_get_pubkey(data["from"])[:success] === true
+            return {success: true}
+        else
+            return Wallet.validation_key_and_get_pubkey(data["from"])
+        end
+    end
+
+    def self.create_find_last_balance()
+    end
+
     ##
     # == Params
     # txdata = data for a transaction form key-value hash class

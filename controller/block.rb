@@ -1,16 +1,13 @@
 class Block
-    attr_accessor :timestamp, :last_hash, :hash, :data
+    attr_accessor :hash, :data
 
-    def initialize(timestamp, last_hash, hash, data)
-        @timestamp = timestamp
-        @last_hash = last_hash
+    def initialize(hash, data)
         @hash = hash
         @data = data
     end
 
     def genesis
     end
-
 
     def self.validation(block)
 
@@ -71,7 +68,6 @@ class Block
     # == Contoh data
     # Start data block nomor 2 -------------
     # {
-    #     "_id" : ObjectId("5d72033191fc1b8c08bed2a9"),
     #     "hash" : "000caf794e47a613d9000a4dce1b37ab4894502c9fc218fc49019ab112708601",
     #     "data" : {
     #         "num" : 2,
