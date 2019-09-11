@@ -39,7 +39,7 @@ class Merkle
                 hash_join = merkles_arr[urut-2] + merkles_arr[urut-1]
 
                 # buat hash baru dari yang sudah digabungkan
-                nuhash = Digest::SHA1.hexdigest(hash_join)
+                nuhash = Digest::SHA256.hexdigest(hash_join)
 
                 nu_arr.push(nuhash)
             end
