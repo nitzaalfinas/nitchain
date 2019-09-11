@@ -113,6 +113,9 @@ class Transaction
         end
     end
 
+    ##
+    # == Keterangan
+    # kirim saja kepada server pusat terlebih dahulu
     def self.send_to_pool(transaction_data)
 
     end
@@ -120,7 +123,7 @@ class Transaction
     ##
     # == Params
     # txdata = data for a transaction form key-value hash class
-    # == Data structure	
+    # == Data structure
     # {
     #     "hash":"f45a614f0725d9981182735af505af71e02bfa0c56958ba648dd9cee9b63eb5a",
     #     "pubkey":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwunW9qbYH+KnXpxEu8w\niLiZSN2s1o21z7KG9w8k+xsbTYJ+BfGPEYKnP34eKN+5pp7lo+Uvfd/NIeO2c/gs\nzsc9iZ3mjuJAxdMArirpptac5bdR77/jSmL6hws1uuvaX+SC/5LziwjbSOZn/xl7\nBlsYMRmreVJJyTbBoMeewYXYJ+zBKBsJjo/nHf1cRrlB2nMX1IahW7uE7nJaVT72\nvdCMR1Dq418StJX6hN8qG3xR6f1KWtTHqKl2Ykdi+l6pKYK8GOO+3RpRGadvDluo\nIfcQGdcE3IsRWYwrReMIt/GgjfhxNIi1nac6+ASrNtMv2UAX567h7mMeliJ4fO5j\ngwIDAQAB\n-----END PUBLIC KEY-----\n",
@@ -142,7 +145,15 @@ class Transaction
     #     }
     # }
     def self.validation(txdata)
+        if txdata["hash"] && txdata["pubkey"] && txdata["sign"] && txdata["tx"] && txdata["tx"]["input"] && txdata["tx"]["input"]["balance"] && txdata["tx"]["input"]["from"] && txdata["tx"]["input"]["to"] && txdata["tx"]["input"]["amount"] && txdata["tx"]["input"]["fee"] && txdata["tx"]["input"]["data"] && txdata["tx"]["outputs"]
 
+
+
+        else
+            return {success: false, msg: "invalid transaction format"}
+        end
     end
+
+    
 
 end
