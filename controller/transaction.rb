@@ -157,10 +157,15 @@ class Transaction
                     # check apakah sha1 pubkey sama dengan from
                     if "Nx#{Digest::SHA1.hexdigest(txdata["pubkey"])}" === txdata["tx"]["input"]["from"]
 
-                        # check apakah amount transaction
+                        # check amount transaction
                         if (txdata["tx"]["input"]["balance"] - txdata["tx"]["input"]["fee"]) === (txdata["tx"]["outputs"][0]["balance"] + txdata["tx"]["outputs"][1]["balance"])
 
-                            return {success: true}
+                            # checking fee for miner
+                            if txdata["tx"]["input"]["fee"] === txdata["tx"]["outputs"][2]["balance"]
+                                return {success: true}
+                            else
+                                return {success: false, msg: "invalid outputs for miner"}
+                            end
                         else
                             return {success: false, msg: "invalid amount"}
                         end
