@@ -15,6 +15,10 @@ class Blockchain
 
             if Blockchain.checking_incomingprevioushash_and_dblasthash(incomingobj)[:success] === true
 
+                # add to db karena semua sudah valid
+                client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+                dats =  client[:blockchains].insert_one(incomingobj)
+
                 return {success: true}
             else
                 return Blockchain.checking_incomingprevioushash_and_dblasthash(incomingobj)
@@ -32,12 +36,9 @@ class Blockchain
         if dats[0]["hash"] === dataobj["data"]["prevhash"]
 
             if (dats[0]["data"]["num"] + 1) === dataobj["data"]["num"]
-                puts "243"
                 return { success: true, msg: "Incoming previous hash and last has it match" }
             else
-                puts "df"
                 return { success: false, msg: "Last block + 1 is not match with incoming block" }
-
             end
         else
             return { success: false, msg: "db[last_hash] is not match with incoming_block[previous_hash] " }

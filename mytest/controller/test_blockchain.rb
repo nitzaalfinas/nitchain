@@ -8,6 +8,8 @@ require 'redis'
 
 ENV = "test"
 
+require_relative "setup_test"
+
 require_relative '../../controller/block'
 require_relative '../../controller/blockchain'
 require_relative '../../controller/merkle'
@@ -19,7 +21,7 @@ class TestBlockchain < Test::Unit::TestCase
     # data yang akan ditambahkan adalah block nomor 3
     def incoming_block_data
         data = {
-            "hash": "000746211fb44930c2a68d7f1b154c5557a61d1af62cd725aba37a55f0b57910",
+            "hash": "00053870aeea01fb4eae6060e8b6322876e13b481edb988d765ae4c08a9b83f0",
             "data": {
                 "num": 3,
                 "prevhash": "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b",
@@ -77,7 +79,7 @@ class TestBlockchain < Test::Unit::TestCase
                     }
                 ],
                 "time": 1567760775,
-                "nonce": 32724
+                "nonce": 5611
             }
         }
 
@@ -85,9 +87,11 @@ class TestBlockchain < Test::Unit::TestCase
     end
 
     test "def  add_incoming_block" do
-        incomdata = incoming_block_data.to_json
 
-        puts Blockchain.add_incoming_block(incomdata)
+        SetupTest.destroy_blockchain_collections
+        SetupTest.seed_db
+
+        incomdata = incoming_block_data.to_json
 
         assert_equal(true, Blockchain.add_incoming_block(incomdata)[:success])
     end
