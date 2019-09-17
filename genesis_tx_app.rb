@@ -9,8 +9,9 @@ keyobj = JSON.parse(@keyjson)
 zz = {}
 
 zz[:input] = {}
-zz[:input][:balance] = 1000000000
+zz[:input][:genesis] = true
 zz[:input][:from] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
+zz[:input][:balance] = 1000000000
 zz[:input][:to] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
 zz[:input][:amount] = 1000000000
 zz[:input][:fee] = 0

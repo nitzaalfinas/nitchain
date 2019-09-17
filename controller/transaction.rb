@@ -63,8 +63,8 @@ class Transaction
 
                         datasend = {
                             input: {
-                                balance: from__balance_start,
                                 from: data["from"],
+                                balance: from__balance_start,
                                 to: data["to"],
                                 amount: data["amount"],
                                 fee: txfee,
@@ -72,7 +72,8 @@ class Transaction
                             },
                             outputs: [
                                 { address: data["from"], balance: from__output_balance },
-                                { address: data["to"], balance: to__output_balance }
+                                { address: data["to"], balance: to__output_balance },
+                                { address: "miner", balance: txfee },
                             ],
                             time: Time.now.utc.to_i
                         }
@@ -140,6 +141,7 @@ class Transaction
     #         "outputs":[
     #             {"address":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","balance":999999945},
     #             {"address":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","balance":100}
+    #             {"address":"miner","balance":5}
     #         ],
     #         "time":1568218748
     #     }
@@ -157,17 +159,51 @@ class Transaction
                     # check apakah sha1 pubkey sama dengan from
                     if "Nx#{Digest::SHA1.hexdigest(txdata["pubkey"])}" === txdata["tx"]["input"]["from"]
 
-                        # check amount transaction
-                        if (txdata["tx"]["input"]["balance"] - txdata["tx"]["input"]["fee"]) === (txdata["tx"]["outputs"][0]["balance"] + txdata["tx"]["outputs"][1]["balance"])
+                        if txdata["tx"]["input"]["genesis"] != true
 
-                            # checking fee for miner
-                            if txdata["tx"]["input"]["fee"] === txdata["tx"]["outputs"][2]["balance"]
+                            from__balance_start = Wallet.balance(txdata["tx"]["input"]["from"])[:data][:balance]
+
+
+                            # check sender balance start
+                            if from__balance_start === txdata["tx"]["input"]["balance"]
+
+                                # check sender balance start lebih besar dari (amount + fee )
+                                # fee juga tidak boleh minus
+                                if from__balance_start >= txdata["tx"]["input"]["amount"] + txdata["tx"]["input"]["fee"] && txdata["tx"]["input"]["fee"] > 0
+
+                                    to__balance_start = Wallet.balance(txdata["tx"]["input"]["to"])[:data][:balance]
+
+                                    # cek to__balance_start + amount sama dengan outputs
+                                    if to__balance_start + txdata["tx"]["input"]["amount"] === txdata["tx"]["outputs"][1]["balance"]
+
+                                        # cek apakah outputs miner balance pada transaksi ini sama dengan fee
+                                        if txdata["tx"]["outputs"][2]["balance"] === txdata["tx"]["input"]["fee"]
+                                            return {success: true}
+                                        else
+                                            return {success: false, msg: "invalid outputs fee for miner"}
+                                        end
+                                    else
+                                        return {success: false, msg: "invalid to outputs"}
+                                    end
+                                else
+                                    return {success: false, msg: "invalid, balance is not enough"}
+                                end
+                            else
+                                return {success: false, msg: "invalid tx start sender balance"}
+                            end
+                        elsif txdata["tx"]["input"]["genesis"] === true
+
+                            ### HARD CODE GENESIS (SAMAKAN DENGAN YANG DI TEST DAN YANG ADA DI DATABASE)
+                            if txdata["tx"]["input"]["from"] === "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f" &&
+                                    txdata["tx"]["input"]["balance"] === 1000000000 &&
+                                    txdata["tx"]["input"]["to"] === "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096" &&
+                                    txdata["tx"]["input"]["amount"] === 1000000000 &&
+                                    txdata["tx"]["input"]["fee"] === 0
+
                                 return {success: true}
                             else
-                                return {success: false, msg: "invalid outputs for miner"}
+                                return {success: false, msg: "invalid genesis"}
                             end
-                        else
-                            return {success: false, msg: "invalid amount"}
                         end
                     else
                         return {success: false, msg: "invalid comparison address from and public key"}
