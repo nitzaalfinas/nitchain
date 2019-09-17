@@ -311,7 +311,6 @@ class Block
 
             puts Transaction.validation(hkstring)
 
-
             arr.push(Transaction.validation(hkstring)[:success])
         end
 

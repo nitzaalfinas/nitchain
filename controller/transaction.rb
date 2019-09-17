@@ -178,6 +178,7 @@ class Transaction
 
                                         # cek apakah outputs miner balance pada transaksi ini sama dengan fee
                                         if txdata["tx"]["outputs"][2]["balance"] === txdata["tx"]["input"]["fee"]
+
                                             return {success: true}
                                         else
                                             return {success: false, msg: "invalid outputs fee for miner"}

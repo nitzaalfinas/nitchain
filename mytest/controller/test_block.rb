@@ -18,10 +18,10 @@ class TestBlock < Test::Unit::TestCase
     # data yang akan ditambahkan adalah block nomor 3
     def block_data
         data = {
-            "hash": "000746211fb44930c2a68d7f1b154c5557a61d1af62cd725aba37a55f0b57910",
+            "hash": "00053870aeea01fb4eae6060e8b6322876e13b481edb988d765ae4c08a9b83f0",
             "data": {
                 "num": 3,
-                "prevhash": "000041e532fb80cab55811483e5db2933bb315ecacda5cff7892dccde9a05985",
+                "prevhash": "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b",
                 "tcount": 1,
                 "tamount": 1000000150,
                 "diff": 3,
@@ -76,7 +76,7 @@ class TestBlock < Test::Unit::TestCase
                     }
                 ],
                 "time": 1567760775,
-                "nonce": 32724
+                "nonce": 5611
             }
         }
 

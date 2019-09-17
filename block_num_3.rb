@@ -74,7 +74,7 @@ block = {}
 
 block[:data] = {}
 block[:data][:num] = 3
-block[:data][:prevhash] = "000041e532fb80cab55811483e5db2933bb315ecacda5cff7892dccde9a05985"
+block[:data][:prevhash] = "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b"
 block[:data][:tcount] = 1
 block[:data][:tamount] = 1000000150
 block[:data][:diff] = 3
