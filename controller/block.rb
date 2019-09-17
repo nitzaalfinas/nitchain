@@ -22,31 +22,31 @@ class Block
 
         if Block.checking_data_structure(block)[:success] == true
 
-            puts "satu"
+            # puts "satu"
 
             if Block.checking_hash_and_data(block)[:success] === true
 
-                puts "dua"
+                # puts "dua"
 
                 if Block.checking_transaction_count(block)[:success] == true
 
-                    puts "tiga"
+                    # puts "tiga"
 
                     if Block.checking_total_amount(block)[:success] == true
 
-                        puts "empat"
+                        # puts "empat"
 
                         if Block.checking_difficulty(block)[:success] == true
 
-                            puts "lima"
+                            # puts "lima"
 
                             if Block.checking_merkle(block)[:success] == true
 
-                                puts "enam"
+                                # puts "enam"
 
                                 if Block.checking_tx_datas(block)[:success] == true
 
-                                    puts "7"
+                                    # puts "7"
 
                                     return {
                                         success: true
@@ -266,8 +266,8 @@ class Block
 
             total_tx_outputs_and_reward = total_tx_outputs + obj["data"]["reward"]
 
-            puts "total_tx_outputs_and_reward: " + total_tx_outputs_and_reward.to_s
-            puts 'obj["data"]["tamount"]: ' + obj["data"]["tamount"].to_s
+            # puts "total_tx_outputs_and_reward: " + total_tx_outputs_and_reward.to_s
+            # puts 'obj["data"]["tamount"]: ' + obj["data"]["tamount"].to_s
 
             if total_tx_outputs_and_reward === obj["data"]["tamount"]
                 return {success: true, msg: "total amount match"}
