@@ -98,7 +98,7 @@ minehash = ""
 nonce = 0
 loop do
     #block[:time] = Time.now.utc.to_i # ini harus selalu diatas nonce
-    block[:data][:time] = 1567760775
+    block[:data][:time] = 1567761135
     block[:data][:nonce] = nonce
     minehash = Digest::SHA256.hexdigest(block[:data].to_json)
 

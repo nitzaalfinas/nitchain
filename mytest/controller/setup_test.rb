@@ -142,7 +142,7 @@ class SetupTest
 
     def self.block_three
         data = {
-            "hash": "00053870aeea01fb4eae6060e8b6322876e13b481edb988d765ae4c08a9b83f0",
+            "hash": "0007370d8df20a39fef8f62e54a864b8b2106b593a9cbd248a68ad6999e8b47c",
             "data": {
                 "num": 3,
                 "prevhash": "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b",
@@ -199,8 +199,8 @@ class SetupTest
                         "balance": 140
                     }
                 ],
-                "time": 1567760775,
-                "nonce": 5611
+                "time": 1567761135,
+                "nonce": 282
             }
         }
 
