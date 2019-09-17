@@ -23,6 +23,9 @@ zz[:outputs][0][:balance] = 0
 zz[:outputs][1] = {}
 zz[:outputs][1][:address] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
 zz[:outputs][1][:balance] = 1000000000
+zz[:outputs][2] = {}
+zz[:outputs][2][:address] = "miner"
+zz[:outputs][2][:balance] = 0
 
 
 # kunci pada date time ini
@@ -84,8 +87,12 @@ block[:data][:txds][0] = storedata
 
 block[:data][:outputs] = []
 block[:data][:outputs][0] = {}
-block[:data][:outputs][0][:address] = zz[:input][:to]
-block[:data][:outputs][0][:balance] = 1000000050
+block[:data][:outputs][0][:address] = zz[:input][:from]
+block[:data][:outputs][0][:balance] = 0
+block[:data][:outputs][1] = {}
+block[:data][:outputs][1][:address] = zz[:input][:to]
+block[:data][:outputs][1][:balance] = 1000000050
+
 
 # 1.3. Mine!
 minehash = ""

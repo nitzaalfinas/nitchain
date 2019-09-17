@@ -5,26 +5,31 @@ require_relative 'next_key'
 
 keyobj = JSON.parse(@keyjson)
 
+# STEP 1. BUAT TRANSAKSI
 zz = {}
-
 zz[:input] = {}
-zz[:input][:from] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
-zz[:input][:balance] = 999900100
-zz[:input][:to] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
-zz[:input][:amount] = 200000
+zz[:input][:from] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
+zz[:input][:balance] = 1000000050
+zz[:input][:to] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
+zz[:input][:amount] = 45
+zz[:input][:fee] = 5
+zz[:input][:data] = {}
 
 zz[:outputs] = []
 zz[:outputs][0] = {}
-zz[:outputs][0][:address] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
-zz[:outputs][0][:balance] = 999700100
+zz[:outputs][0][:address] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
+zz[:outputs][0][:balance] = 1000000000
 zz[:outputs][1] = {}
-zz[:outputs][1][:address] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
-zz[:outputs][1][:balance] = 300000
+zz[:outputs][1][:address] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
+zz[:outputs][1][:balance] = 45
+zz[:outputs][2] = {}
+zz[:outputs][2][:address] = "miner"
+zz[:outputs][2][:balance] = 5
 
 # kunci pada date time ini
-zz[:time] = 1567760639
+zz[:time] = 1568688154
 
-puts "tx ===="
+puts "DATA TRANSAKSI ADALAH (TXDS)"
 puts zz.to_json
 
 thehash = Digest::SHA256.hexdigest(zz.to_json)
@@ -67,13 +72,13 @@ puts merkle_root_hash
 block = {}
 
 block[:data] = {}
-block[:data][:num] = 3
-block[:data][:prevhash] = "000caf794e47a613d9000a4dce1b37ab4894502c9fc218fc49019ab112708601"
+block[:data][:num] = 2
+block[:data][:prevhash] = "000069e73b3b34e03031693d26e116713e2daf45e6150f24fd3977b758bc7bba"
 block[:data][:tcount] = 1
-block[:data][:tamount] = 1000000150
+block[:data][:tamount] = 1000000100
 block[:data][:diff] = 3
 block[:data][:mroot] = merkle_root_hash
-block[:data][:miner] = "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f"
+block[:data][:miner] = "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096"
 block[:data][:reward] = 50
 block[:data][:txs] = [thehash]
 block[:data][:txds] = []
@@ -82,10 +87,10 @@ block[:data][:txds][0] = storedata
 block[:data][:outputs] = []
 block[:data][:outputs][0] = {}
 block[:data][:outputs][0][:address] = zz[:input][:from]
-block[:data][:outputs][0][:balance] = 999700150
+block[:data][:outputs][0][:balance] = 1000000055
 block[:data][:outputs][1] = {}
 block[:data][:outputs][1][:address] = zz[:input][:to]
-block[:data][:outputs][1][:balance] = 300000
+block[:data][:outputs][1][:balance] = 45
 
 # 1.3. Mine!
 minehash = ""
@@ -111,3 +116,10 @@ puts block[:data].to_json
 puts ""
 puts ">>> simpan dalam blockchains[n] hash"
 puts minehash
+
+puts ""
+akhir = {
+    hash: minehash,
+    data: block[:data]
+}
+puts akhir.to_json
