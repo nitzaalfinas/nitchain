@@ -6,6 +6,12 @@ class SetupTest
         client[:blockchains].delete_many()
     end
 
+    def self.destroy_pool_collections
+        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+
+        client[:pools].delete_many()
+    end
+
     def self.seed_db
 
         client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
