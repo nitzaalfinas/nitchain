@@ -49,8 +49,6 @@ puts signature
 
 storedata = {}
 storedata[:hash] = thehash
-storedata[:from] = zz[:input][:from]
-storedata[:to] = zz[:input][:to]
 storedata[:pubkey] = keyobj["pubkey"]
 storedata[:sign] = signature
 storedata[:tx] = zz
@@ -74,7 +72,7 @@ block = {}
 
 block[:data] = {}
 block[:data][:num] = 3
-block[:data][:prevhash] = "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b"
+block[:data][:prevhash] = "000111b142250f0275bd2e18549b358d957837f96d63883fec22458228adfbcd"
 block[:data][:tcount] = 1
 block[:data][:tamount] = 1000000150
 block[:data][:diff] = 3
