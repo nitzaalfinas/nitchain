@@ -89,8 +89,6 @@ class SetupTest
                 "txds": [
                     {
                         "hash": "4e90136b21c89e24bc9fe65eaa2dfe071e38a719201ef88f49d714609c4d949f",
-                        "from": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                        "to": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "pubkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n",
                         "sign": "TeOANnD6AuZHpT+R35OZxbE1LR7/vVkjwM3kmU8ezefOGqFkRgwJofSXtwYx\nSwToCJmgRtm/qwcIrU0Rqoln3yxG4L2WXG/Kxszdp8zdRkHRydrA5rtbo0m8\nYPtOaFGCXcg7AtsxE2VclnGPhyIAow0kmOw/3ola/ZpdOClS6mw7P0eTSAcQ\n/gqV/R+p7Ceq7cYCBVohBjUVWIYar+iAGNeYqmTJSftc9EuK8fD9Odc4prHW\nLPqoVulwdkZDmrYNpHgT/27xQNZE53la+AeEIq1WZuCgENk1G0rV7qSgqT3Q\nvE1Vg3ujY0qRICfFIS7y1Z6/ZYB9Ba97i3LCguvUDQ==\n",
                         "tx": {
