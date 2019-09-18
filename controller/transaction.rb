@@ -163,7 +163,6 @@ class Transaction
 
                             from__balance_start = Wallet.balance(txdata["tx"]["input"]["from"])[:data][:balance]
 
-
                             # check sender balance start
                             if from__balance_start === txdata["tx"]["input"]["balance"]
 
