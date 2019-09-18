@@ -73,7 +73,7 @@ class SetupTest
         }
 
         block_second = {
-            "hash": "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b",
+            "hash": "000111b142250f0275bd2e18549b358d957837f96d63883fec22458228adfbcd",
             "data": {
                 "num": 2,
                 "prevhash": "000041e532fb80cab55811483e5db2933bb315ecacda5cff7892dccde9a05985",
@@ -129,7 +129,7 @@ class SetupTest
                     }
                 ],
                 "time": 1567760775,
-                "nonce": 5144
+                "nonce": 7935
             }
         }
 
@@ -140,10 +140,10 @@ class SetupTest
 
     def self.block_three
         data = {
-            "hash": "0007370d8df20a39fef8f62e54a864b8b2106b593a9cbd248a68ad6999e8b47c",
+            "hash": "000e23cc0dda29a5e7000a7669981ec2698e6b13946d594c525300c5a3cd4482",
             "data": {
                 "num": 3,
-                "prevhash": "0002aab859017d41b67d9c2b14acb3cc264fbbf5ff3bb71b6e1f92826c6a237b",
+                "prevhash": "000111b142250f0275bd2e18549b358d957837f96d63883fec22458228adfbcd",
                 "tcount": 1,
                 "tamount": 1000000150,
                 "diff": 3,
@@ -156,8 +156,6 @@ class SetupTest
                 "txds": [
                     {
                         "hash": "4baf6c21c4611822971ee5c7354f3979cdb4c13b1a8972fefd04b4e0aa839730",
-                        "from": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                        "to": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
                         "pubkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n",
                         "sign": "dV+b+7gArDPoadFe1PZv3CjOCgyhBGNoBr6N8qFcLrZsDIMuR3z/qM1xKDiS\nbvOeeRgtKjeKpkg55nvoctCoilpTuccEV6BHSsQuQB6zDiUb601p/L0JfJhK\nWj7eUQejYj+nnPAZNzG39o362pjWmqscgT15Az1avVji0Fz4AL+kAuRt5h4d\nIejBO61CtcjCO72VFMJqmmTYvpYUSojOJ5oN0WJ/r5mdbMVmpiD4ORh2z9BA\nONgy1tlVH4r/fnDfKmfoTW7rkYdM/sqVSyHmsNK+NpX5OsfqcMz3B9TLMyjC\niYdhwJMKZ/2jkEaIa/VUZSCBj0w7qEe3yZfF/kKyoA==\n",
                         "tx": {
@@ -198,7 +196,7 @@ class SetupTest
                     }
                 ],
                 "time": 1567761135,
-                "nonce": 282
+                "nonce": 412
             }
         }
 
