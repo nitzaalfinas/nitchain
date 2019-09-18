@@ -12,12 +12,7 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 
 ## Todo
 * Sync
-    * checking transaction
-    * checking miner node (perlu atau tidak?)
-    * checking reward
-    * outputs address + including miner reward
-    * time
-        * prev block dan incoming block tidak boleh kurang dari 5 menit
+    * pool 
 
 
 ## Flowcharts
