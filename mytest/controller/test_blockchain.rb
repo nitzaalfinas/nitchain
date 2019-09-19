@@ -21,7 +21,7 @@ class TestBlockchain < Test::Unit::TestCase
     test "def  add_incoming_block" do
 
         SetupTest.destroy_blockchain_collections
-        SetupTest.seed_db
+        SetupTest.seed_blockchains_collections
 
         assert_equal(true, Blockchain.add_incoming_block(SetupTest.block_three.to_json)[:success])
     end

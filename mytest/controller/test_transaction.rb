@@ -65,7 +65,7 @@ class TestTransaction < Test::Unit::TestCase
         # ------------
         # karena transaksi ini harus diletakkan pada block nomor 3, maka kita harus hapus semua data dan berikan seed untuk populasi database jadi block 1 dan 2
         SetupTest.destroy_blockchain_collections
-        SetupTest.seed_db
+        SetupTest.seed_blockchains_collections
         # ------------
 
         # --- false "invalid format"---

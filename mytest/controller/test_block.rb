@@ -27,7 +27,7 @@ class TestBlock < Test::Unit::TestCase
     test "valid block" do
 
         SetupTest.destroy_blockchain_collections
-        SetupTest.seed_db
+        SetupTest.seed_blockchains_collections
 
         block = SetupTest.block_three.to_json
 
