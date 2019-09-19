@@ -17,7 +17,7 @@ class Mine
         array_of_hash = []            # array of hash for creating merkle root and tree
         transactions.each do |t|
             total_ouput_transactions = total_ouput_transactions + t["tx"]["outputs"].sum { |f| f["balance"] }
-            array_of_hash.push(f["hash"])
+            array_of_hash.push(t["hash"])
         end
 
         lastblock = Blockchain.get_last_block_in_db
@@ -37,12 +37,10 @@ class Mine
             miner: BASE_ADDRESS,
             reward: mining_reward,
             txs: array_of_hash,
-            txds: transactions,
-            outputs:
+            txds: transactions
         }
 
-        # get all data in the pool
-        return Mine.get_all_data_in_the_pool(mongclient)
+        return newblock
 
     end
 
@@ -56,9 +54,6 @@ class Mine
         end
 
         return datas
-    end
-
-    def self.block_outputs_calculation
     end
 
 end
