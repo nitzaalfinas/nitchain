@@ -31,6 +31,76 @@ class Wallet
 
     end
 
+    # from, to, amount, fee, data
+    def self.transfer(data_json)
+        obj = JSON.parse(data_json)
+
+        data = {
+            from: obj["from"],
+            to: obj["to"],
+            amount: obj["amount"],
+            fee: obj["fee"],
+            data: obj["data"],
+            time: obj["time"]
+        }
+
+        main_pubkey_file = "#{MAIN_CONFIG_PATH}/main_pubkey"
+        text = data.to_json
+
+        is_this_valid_sender_file_address = Wallet.checking_valid_sender_file_address(data[:from])[:success]
+
+        # cek dulu, apakah sender punya file private key
+        if is_this_valid_sender_file_address === true
+            mykey_text = File.read("#{KEYSTORE_PATH}/#{data[:from]}")
+            mykey_file_obj = JSON.parse(mykey_text)
+
+            my_privkey = OpenSSL::PKey::RSA.new(mykey_file_obj["privkey"])
+            signature = Base64.encode64( my_privkey.sign(OpenSSL::Digest::SHA256.new, text) )
+
+            destination_public_key = OpenSSL::PKey::RSA.new(File.read(main_pubkey_file))
+            hash_string = Digest::SHA256.hexdigest(text)
+            public_encrypt = destination_public_key.public_encrypt(text)
+            encrypted_string = Base64.encode64(public_encrypt)
+
+            sender_public_key_obj = Wallet.sender_key_obj(data[:from])
+            sender_public_key = sender_public_key_obj["pubkey"]
+
+            data_to_submit = {}
+            data_to_submit[:hash] = hash_string
+            data_to_submit[:enc] = encrypted_string
+            data_to_submit[:sign] = signature
+            data_to_submit[:pubkey] = sender_public_key
+            data_to_submit[:data] = data
+
+            if ENV == "production"
+                # kirim kepada pool
+                send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
+            elsif ENV == "development"
+                # kirim kepada pool
+                send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
+            elsif  ENV == "test"
+                send_to_pool = '{"success": true}'
+            end
+
+            obj_send_to_pool = JSON.parse(send_to_pool)
+
+            if obj_send_to_pool["success"] === true
+                return {success: true, msg: "", data: data_to_submit}
+            else
+                return {success: false, msg: "please check your internet"}
+            end
+        else
+            return {success: false, msg: "File not found"}
+        end
+    end
+
+    # == Keterangan
+    # Retrieving data in the private key file
+    def self.sender_key_obj(address)
+        data_text = File.read("#{KEYSTORE_PATH}/#{address}")
+        return JSON.parse(data_text)
+    end
+
     # HANYA DIGUNAKAN UNTUK VALIDASI SENDER KARENA INI BERBAHAYA JIKA KEY LEAK
     def self.validation_key_and_get_pubkey(address)
 
@@ -64,7 +134,6 @@ class Wallet
             return {success: false, msg: "invalid address format"}
         end
     end
-
 
     def self.checking_pubkey_and_address(pubkey, address)
         if "Nx#{Digest::SHA1.hexdigest(pubkey)}" === address

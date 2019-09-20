@@ -18,73 +18,31 @@ require_relative '../../controller/pool'
 
 class TestPool < Test::Unit::TestCase
 
-    def transaction_data
-        data = {
-            "hash": "4baf6c21c4611822971ee5c7354f3979cdb4c13b1a8972fefd04b4e0aa839730",
-            "pubkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n",
-            "sign": "dV+b+7gArDPoadFe1PZv3CjOCgyhBGNoBr6N8qFcLrZsDIMuR3z/qM1xKDiS\nbvOeeRgtKjeKpkg55nvoctCoilpTuccEV6BHSsQuQB6zDiUb601p/L0JfJhK\nWj7eUQejYj+nnPAZNzG39o362pjWmqscgT15Az1avVji0Fz4AL+kAuRt5h4d\nIejBO61CtcjCO72VFMJqmmTYvpYUSojOJ5oN0WJ/r5mdbMVmpiD4ORh2z9BA\nONgy1tlVH4r/fnDfKmfoTW7rkYdM/sqVSyHmsNK+NpX5OsfqcMz3B9TLMyjC\niYdhwJMKZ/2jkEaIa/VUZSCBj0w7qEe3yZfF/kKyoA==\n",
-            "tx": {
-                "input": {
-                    "from": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                    "balance": 1000000055,
-                    "to": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
-                    "amount": 95,
-                    "fee": 5,
-                    "data": {}
-                },
-                "outputs": [
-                    {
-                        "address": "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-                        "balance": 999999955
-                    },
-                    {
-                        "address": "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
-                        "balance": 140
-                    },
-                    {
-                        "address": "miner",
-                        "balance": 5
-                    }
-                ],
-                "time": 1568695754
-            }
-        }
-        return data
-    end
+    # sekarang adalah block nomor 2
+    # test akan kita buat pada block nomor 3
+    test "def self.add berhasil karena data belum ada, balance cukup" do
+        # hapus semua yang ada pada blockchains
+        SetupTest.destroy_blockchain_collections
 
-    test "def self.add berhasil karena data belum ada" do
+        # hapus semua yang ada pada pools
         SetupTest.destroy_pool_collections
 
-        trxobj = JSON.parse(transaction_data.to_json)
+        # masukkan data block 1 dan 2
+        SetupTest.seed_blockchains_collections
 
-        # masukkan data kedalam database pools
-        Pool.add(trxobj.to_json)
+        # kirim 1 transaksi kedalam pool
+        # data yang dikirim ke pool akan memberikan return seperti ini
+        # {:success=>true, :msg=>"", :data=>{:hash=>"13e7449cfdb44bff6173e17328075aa3f05ca60b5413d1ca86d462c1ea6fa673", :enc=>"gmQsSUeZdpR8olKdQZ1M8gNLR4q6pq4iHwd4aw+GVVUlkZ014rNyHCt6zkSz\npZ7XnoRdAXzjkWr3un3/pXRKG/qjkwBS2UgUJXxST/Ga9fvDjLbfe/7vB89H\n12P+zJYNW5K+igIfOqIVexnTzLnz9u+d0Rm33fVb25lvFQCQ2ARvr3W6vyDf\nNZ6wn9Mq4s5kuQTVBv2MYuFDInHf5PYxS+/z2kWnwGKWmKNXgiPKPt+5JA45\nTAZ1HNGIZQQR4oeS0pdL8nvQk+hSunTH1/1jZ4eZXku2au/kfGm9515Zoeki\n0sPOeYmBMjiVUa9rBAYyIQykDgAbTZ5l6tbZXeFsyg==\n", :sign=>"A8IW5LLYco/XTSOCnSTJOGzJmu1NRufjvE74Yoq74Yh3K4KAULWbtwdOan1N\nhXryGO8o5U5rhx8IKkBP30NzHjmgkP3z5pQPqnNiIe1Q3ufeoSyv9nApamZY\n9eMeBGnu+byzD/veLvDh/zUeo+XgWMe7l/Qv9XynKoNtBMNbprOlitSbzAHF\nKZgpTY7JPyvfNslNocGUXuG5AUQwYKFn4Ik8vGe0ywhQwibCDQOyV1Ntb072\nSLrsDruZD5ukc4sbPBtxP6mycbDkOcDOpONc8PoiaAWQoFQ+yo+Rzt+67oCb\nGWjjCNn0rYFZwmhsc55FHLykE29hTBrngL8UUSf9ig==\n", :pubkey=>"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwylo6ELYbXFVPmveYEsa\nBvHx3dPpFWmubdlMqFLAVluDY/+maG8CsXFO3GDTAK7z8qj8ZggOIWAhWW0VkDWl\ntbkZezfvloQnbV9lwMncCEQX2YEAK0cl8JmUTXmDkeeRBGZNj7VHa+/6uMv0HZGm\ns5sKr51TGIoxlnH4s8jLkd83mUcLQz+9/MXdMMS8lcNengk7ZTs/xA+PgRozf/yV\n/hc8Qf6DdMxYYmg4rEgZjuO1TghJ9o5QJXYUYZDr40he39ZUJDw/11PKnQQcJNaO\ncv+iQfTtFAGHHo/eBFFzjNccYm8/ojnGGGORlYzH9OXiA4wVG0Z/BNdtl5Wi/xvP\nLQIDAQAB\n-----END PUBLIC KEY-----\n", :data=>{:from=>"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096", :to=>"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f", :amount=>100, :fee=>5, :data=>{}, :time=>1568933789}}}
+        # yang perlu kita simpan dalam pool hanya properti data
+        wallet_transfer = Wallet.transfer('{"from":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":100,"fee":5,"data":{},"time":1568933789}')
 
-        # cek apakah data masuk
+        Pool.add(wallet_transfer[:data].to_json)
+
         mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
-        jumlah_data = mongoclient[:pools].find({hash: trxobj["hash"]}).to_a.count
 
-        assert_equal(1, jumlah_data)
+        assert_equal(2, mongoclient[:poolouts].find().to_a.count )
 
-    end
-
-    # test disini memasukkan data 2x, tetapi hasil akhir tetap harus 1
-    test "def self.add gagal karena data belum ada" do
-        SetupTest.destroy_pool_collections
-
-        trxobj = JSON.parse(transaction_data.to_json)
-
-        # masukkan data kedalam database pools
-        Pool.add(trxobj.to_json)
-
-        # masukkan data kedalam database pools
-        Pool.add(trxobj.to_json)
-
-        # cek apakah data masuk
-        mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
-        jumlah_data = mongoclient[:pools].find({hash: trxobj["hash"]}).to_a.count
-
-        assert_equal(1, jumlah_data)
+        assert_equal(1, mongoclient[:pools].find().to_a.count )
 
     end
 end
