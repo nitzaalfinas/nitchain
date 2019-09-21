@@ -11,44 +11,54 @@ class Mine
     def self.mine
         mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
 
+        # 1. get last block in database
         lastblock = Blockchain.get_last_block_in_db
+
+        # 2. what number block to mine?
         blocknumber_to_mine = lastblock["data"]["num"] + 1
 
+        # 3. get all transactions in the pool
         transactions = Mine.get_all_data_in_the_pool(mongoclient)
 
+        # 4. get all the pool output transactions (balance end result)
         outputs = Mine.get_all_pool_output(mongoclient, blocknumber_to_mine)
 
-        total_ouput_transactions = 0  # all summary outputs in the transactions
-        hash_array = []            # array of hash for creating merkle root
-        transactions.each do |t|
-            hash_array.push(t["hash"])
-        end
-
+        # 5. array of hash for each transactions
+        hash_array = []
         hash_array_for_txs = []
         transactions.each do |t|
-            hash_array_for_txs.push(t["hash"])
+            hash_array.push(t["hash"])                     # using for merkle calculation
+            hash_array_for_txs.push(t["hash"])             # using for storing in the chain. We can't user `hash_array` because it become 2 array if it store in the block. Because of merkle calculation
         end
 
-        # buat variabel disini supaya nanti bisa diganti-ganti
+        # 6. buat variabel disini supaya nanti bisa diganti-ganti
         mining_reward = 50
 
-        # mining sama dengan membuat block baru!
+        # 7. we can use outputs array to get total outputs
+        tamount = outputs[:balances].sum { |f| f[:balance] }
+
+        # 8. tfee
+        tfee = outputs[:miner_fee]
+
+        # 9. mining sama dengan membuat block baru!
         newblock = {}
+        newblock[:hash] = nil                              # letakkan disini supaya urutan hashnya nanti jadi benar
         newblock[:data] = {}
         newblock[:data][:num] = blocknumber_to_mine
         newblock[:data][:prevhash] = lastblock["hash"]
         newblock[:data][:tcount] = transactions.size
-        newblock[:data][:tamount] = total_ouput_transactions + mining_reward
+        newblock[:data][:tamount] = tamount
         newblock[:data][:diff] = 3
         newblock[:data][:mroot] = Merkle.create(hash_array) # merkle root bisa merubah hash_array. Jadi, disini harus dipisahkan
         newblock[:data][:miner] = BASE_ADDRESS
         newblock[:data][:reward] = mining_reward
+        newblock[:data][:tfee] = tfee
         newblock[:data][:txs] = hash_array_for_txs
         newblock[:data][:txds] = transactions
-        newblock[:data][:outputs] = outputs
+        newblock[:data][:outputs] = outputs[:balances]
         newblock[:data][:time] = Time.now.utc.to_i
 
-        # 1.3. Mine!
+        # 10. Mine!
         minehash = ""
         nonce = 0
         loop do
@@ -64,10 +74,21 @@ class Mine
             end
         end
 
+        # 11. replace hash
         newblock[:hash] = minehash
 
-        return newblock
+        # 12. HARUSNYA DARI SINI DI BROADCAST DULU, BARU DISIMPAN!!!!
 
+        # 13. simpan block dalam database
+        mongoclient[:blockchains].insert_one(newblock)
+
+        # 14. hapus data yang di pools
+        mongoclient[:pools].delete_many()
+
+        # 15. hapus data yang ada di poolouts
+        mongoclient[:poolouts].delete_many()
+
+        return newblock
     end
 
     def self.get_all_data_in_the_pool(mongoclient)

@@ -309,12 +309,8 @@ class Block
             # hash key must be string
             hkstring = JSON.parse(f.to_json)
 
-            #puts Transaction.validation(hkstring)
-
             arr.push(Transaction.validation(hkstring)[:success])
         end
-
-        #puts arr
 
         if arr.include?(false)
             return {success: false, msg: "invalid data transaction"}
