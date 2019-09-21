@@ -22,30 +22,28 @@ class Transaction
     # }
     def self.validation(txdata)
 
-        puts txdata.to_yaml
-
         if txdata["hash"] && txdata["pubkey"] && txdata["sign"] && txdata["tx"] && txdata["tx"]["block"] && txdata["tx"]["from"] && txdata["tx"]["to"] && txdata["tx"]["amount"] && txdata["tx"]["fee"] && txdata["tx"]["data"] && txdata["tx"]["time"]
 
-            puts "a1"
+            # puts"a1"
 
             # compare hash and tx-in-json
             if txdata["hash"] === Digest::SHA256.hexdigest(txdata["tx"].to_json.to_s)
 
-                puts "a2"
+                # puts"a2"
 
                 # check apakah address from dan address to valid?
                 if Wallet.validation_address_format(txdata["tx"]["from"])[:success] === true && Wallet.validation_address_format(txdata["tx"]["to"])[:success] === true
 
-                    puts "a3"
+                    # puts"a3"
 
                     # check apakah sha1 pubkey sama dengan from
                     if "Nx#{Digest::SHA1.hexdigest(txdata["pubkey"])}" === txdata["tx"]["from"]
 
-                        puts "a4"
+                        # puts"a4"
 
                         if txdata["tx"]["block"] > 1
 
-                            puts "a5"
+                            # puts"a5"
 
                             if txdata["tx"]["fee"] > 0
                                 return {success: true}

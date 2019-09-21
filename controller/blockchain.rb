@@ -51,9 +51,9 @@ class Blockchain
 
     def self.checking_incomingtime_and_dblasttime(dataobj, lastblock)
 
-        puts "lastblock " + lastblock["data"]["time"].to_s
-        puts "incomingblock " + dataobj["data"]["time"].to_s
-        puts "lastblock+5 " + (lastblock["data"]["time"] + (5*60)).to_s
+        # puts "lastblock " + lastblock["data"]["time"].to_s
+        # puts "incomingblock " + dataobj["data"]["time"].to_s
+        # puts "lastblock+5 " + (lastblock["data"]["time"] + (5*60)).to_s
 
         # block dibuat setiap 5 menit
         if dataobj["data"]["time"] > lastblock["data"]["time"] + (5*60)
