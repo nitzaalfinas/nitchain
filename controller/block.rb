@@ -13,8 +13,6 @@ class Block
         @data = data
     end
 
-    # def genesis
-    # end
 
     def self.validation(block)
 
@@ -22,31 +20,31 @@ class Block
 
         if Block.checking_data_structure(block)[:success] == true
 
-            # puts "satu"
+            puts "satu"
 
             if Block.checking_hash_and_data(block)[:success] === true
 
-                # puts "dua"
+                puts "dua"
 
                 if Block.checking_transaction_count(block)[:success] == true
 
-                    # puts "tiga"
+                    puts "tiga"
 
                     if Block.checking_total_amount(block)[:success] == true
 
-                        # puts "empat"
+                        puts "empat"
 
                         if Block.checking_difficulty(block)[:success] == true
 
-                            # puts "lima"
+                            puts "lima"
 
                             if Block.checking_merkle(block)[:success] == true
 
-                                # puts "enam"
+                                puts "enam"
 
                                 if Block.checking_tx_datas(block)[:success] == true
 
-                                    # puts "7"
+                                    puts "7"
 
                                     return {
                                         success: true
@@ -247,35 +245,15 @@ class Block
 
     # == Keterangan
     # Untuk mencocokkan jumlah yang ikut pada transaksi ini
-    # - Cek data["tamount"]
-    # - ambil data["reward"]
-    # - jumlahkan semua pada data[outputs], apakah ini cocok dengan data[tamount]
-    # - jumlahkan semua pada data[txds][outputs] + reward, apakah ini cocok dengan data[tamount]
     def self.checking_total_amount(block)
         obj = block
 
         total_ouputs = obj["data"]["outputs"].sum { |f| f["balance"] }
 
         if total_ouputs === obj["data"]["tamount"]
-
-            # jumlahkan semua yang ada pada transaksi
-            total_tx_outputs = 0
-            obj["data"]["txds"].each do |f|
-                total_tx_outputs = total_tx_outputs + f["tx"]["outputs"].sum { |kk| kk["balance"] }
-            end
-
-            total_tx_outputs_and_reward = total_tx_outputs + obj["data"]["reward"]
-
-            # puts "total_tx_outputs_and_reward: " + total_tx_outputs_and_reward.to_s
-            # puts 'obj["data"]["tamount"]: ' + obj["data"]["tamount"].to_s
-
-            if total_tx_outputs_and_reward === obj["data"]["tamount"]
-                return {success: true, msg: "total amount match"}
-            else
-                return {success: false, msg: "total amount is not match (2)"}
-            end
+            return {success: true}
         else
-            return {success: false, msg: "total amount is not match (1)"}
+            return {success: false, msg: "total amount is not match"}
         end
     end
 
@@ -309,8 +287,16 @@ class Block
             # hash key must be string
             hkstring = JSON.parse(f.to_json)
 
+            # puts 'hkstring -----------'
+            # puts f.to_json
+
             arr.push(Transaction.validation(hkstring)[:success])
+
+            puts Transaction.validation(hkstring)
         end
+
+        puts 'arr -------'
+        puts arr
 
         if arr.include?(false)
             return {success: false, msg: "invalid data transaction"}

@@ -86,6 +86,11 @@ class Wallet
             obj_send_to_pool = JSON.parse(send_to_pool)
 
             if obj_send_to_pool["success"] === true
+
+                # simpan dalam pool sendiri
+                mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+                Pool.add(data_to_submit.to_json)
+
                 return {success: true, msg: "", data: data_to_submit}
             else
                 return {success: false, msg: "please check your internet"}

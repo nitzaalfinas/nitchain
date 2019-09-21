@@ -53,8 +53,6 @@ class TestPool < Test::Unit::TestCase
         # yang perlu kita simpan dalam pool hanya properti data
         wallet_transfer = Wallet.transfer('{"block":3,"from":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":100,"fee":5,"data":{},"time":1568933789}')
 
-        Pool.add(wallet_transfer[:data].to_json)
-
         mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
 
         assert_equal(3, mongoclient[:poolouts].find().to_a.count )

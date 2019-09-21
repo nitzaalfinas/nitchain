@@ -12,21 +12,6 @@ require_relative '../../controller/transaction'
 
 class TestTransaction < Test::Unit::TestCase
 
-    test "def create" do
-
-        datainput = {
-            from: "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
-            to: "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
-            amount: 100
-        }
-
-        # data harus berupa json
-        datainput_json = datainput.to_json
-
-        puts Transaction.create(datainput_json).to_json
-
-    end
-
     test "def validation" do
         def data_start
             data_to_validate = {
@@ -111,7 +96,9 @@ class TestTransaction < Test::Unit::TestCase
         # --- true ---
         data = data_start
         data_hash_key_string = JSON.parse(data.to_json)
-        assert_equal(true, Transaction.validation(data_hash_key_string)[:success])
+        puts 'Transaction.validation(data_hash_key_string) -----'
+        puts Transaction.validation(data_hash_key_string)
+        #assert_equal(true, Transaction.validation(data_hash_key_string)[:success])
         # --- true ---
 
 
