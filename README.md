@@ -8,12 +8,14 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 `bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 9090`
 
 ## Test
-`ruby mytest/controller/test_block.rb`
-`ruby mytest/controller/test_blockchain.rb`
-`ruby mytest/controller/test_merkle.rb`
-`ruby mytest/controller/test_pool.rb`
-`ruby mytest/controller/test_transaction.rb`
-`ruby mytest/controller/test_wallet.rb`
+```bash
+ruby mytest/controller/test_block.rb
+ruby mytest/controller/test_blockchain.rb
+ruby mytest/controller/test_merkle.rb
+ruby mytest/controller/test_pool.rb
+ruby mytest/controller/test_transaction.rb
+ruby mytest/controller/test_wallet.rb
+```
 
 ## Todo
 * Sync
