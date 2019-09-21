@@ -16,7 +16,7 @@ class TestWallet < Test::Unit::TestCase
     end
 
     test "def transfer" do
-        data = '{"from":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":100,"fee":5,"data":{},"time":1568933789}'
+        data = '{"block":3,"from":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":100,"fee":5,"data":{},"time":1568933789}'
 
         puts Wallet.transfer(data)
     end

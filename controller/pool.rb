@@ -14,25 +14,33 @@ class Pool
         trxobj = JSON.parse(transaction_data_in_json_string)
         mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
 
-        # cek dulu apakah transaksi sudah ada
-        if mongoclient[:pools].find({hash: trxobj["hash"]}).to_a.count === 0
+        # cek dulu block terakhir dari blockchains collection
+        lastblock = Blockchain.get_last_block_in_db
 
-            # kalkulasi balance
-            if Pool.add_balance_calculation(mongoclient, trxobj["data"] )[:success] === true
+        if trxobj["tx"]["block"] === lastblock["data"]["num"] + 1
+            # cek dulu apakah transaksi sudah ada
+            if mongoclient[:pools].find({hash: trxobj["hash"]}).to_a.count === 0
 
-                # simpan dalam database pools
-                mongoclient[:pools].insert_one(trxobj)
+                # kalkulasi balance
+                if Pool.add_balance_calculation(mongoclient, trxobj["tx"] )[:success] === true
 
-                return {success: true, msg: ""}
+                    # simpan dalam database pools
+                    mongoclient[:pools].insert_one(trxobj)
+
+                    return {success: true, msg: ""}
+                else
+                    return Pool.add_balance_calculation(mongoclient, trxobj["data"] )
+                end
             else
-                return Pool.add_balance_calculation(mongoclient, trxobj["data"] )
+                return {success: false, msg: "transaction exists"}
             end
         else
-            return {success: false, msg: "transaction exists"}
+            return {success: false, msg: "wrong block "}
         end
     end
 
-    # "data" : {
+    # {
+    #     "block" : 3,
     #     "from" : "Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096",
     #     "to" : "Nxf154127e23cde0c8ecbaa8b943aff970c60c590f",
     #     "amount" : 100,
@@ -85,6 +93,11 @@ class Pool
 
                     if @to__balance_start > 0
 
+                        @miner_balance = txdata["fee"]
+                        mongoclient[:pools].find().to_a.each do |fb|
+                            @miner_balance = @miner_balance + fb["fee"]
+                        end
+
                         # cari dan masukkan data kedalam pools (from)
                         mongoclient[:poolouts].find({address: txdata["from"]}).delete_many()
                         mongoclient[:poolouts].insert_one({address: txdata["from"], balance: @from__balance_start })
@@ -93,9 +106,14 @@ class Pool
                         mongoclient[:poolouts].find({address: txdata["to"]}).delete_many()
                         mongoclient[:poolouts].insert_one({address: txdata["to"], balance: @to__balance_start })
 
+                        # cari dan masukkan data kedalam pools (miner_balance)
+                        mongoclient[:poolouts].find({address: 'miner'}).delete_many()
+                        mongoclient[:poolouts].insert_one({address: 'miner', balance: @miner_balance })
+
                         return {success: true, msg: "", data: [
-                            {address: txdata["from"], balance: @from__balance_start },
-                            {address: txdata["to"], balance: @to__balance_start }
+                            {address: txdata["from"], balance: @from__balance_start},
+                            {address: txdata["to"], balance: @to__balance_start},
+                            {address: 'miner', balance: @miner_balance}
                         ]}
                     else
                         return {success: false, msg: "destination balance can't be below zero (2)"}

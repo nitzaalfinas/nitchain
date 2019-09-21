@@ -36,6 +36,7 @@ class Wallet
         obj = JSON.parse(data_json)
 
         data = {
+            block: obj["block"],
             from: obj["from"],
             to: obj["to"],
             amount: obj["amount"],
@@ -70,7 +71,7 @@ class Wallet
             data_to_submit[:enc] = encrypted_string
             data_to_submit[:sign] = signature
             data_to_submit[:pubkey] = sender_public_key
-            data_to_submit[:data] = data
+            data_to_submit[:tx] = data
 
             if ENV == "production"
                 # kirim kepada pool
