@@ -3,7 +3,7 @@ require 'json'
 require 'base64'
 require 'mongo'
 
-require_relative "env"
+#require_relative "env"
 
 class Wallet
 

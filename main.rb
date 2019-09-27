@@ -6,7 +6,7 @@ require 'base64'
 require 'mongo'
 require 'redis'
 
-require_relative 'env'
+require_relative 'controller/env'
 require_relative 'controller/wallet'
 require_relative 'controller/miner_pool'
 require_relative 'controller/miner_mine'
@@ -47,7 +47,9 @@ end
 # == Todo
 # only who own this server can execute this code
 get '/wallet/create' do
-    Wallet.create
+    if params[:password] === LOCAL_PASS
+        Wallet.create
+    end
 end
 
 # == Params
