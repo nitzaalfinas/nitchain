@@ -5,7 +5,7 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 * `bundle install`
 
 ## Run
-`bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 9090`
+`bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 7859` and you can add --host 0.0.0.0 to make it public. But, be careful with security.
 
 ## Test
 ```bash
