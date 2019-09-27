@@ -17,11 +17,17 @@ class TestWallet < Test::Unit::TestCase
 
         wallet_address = Wallet.create
 
-        ada = File.exist?(KEYSTORE_PATH + "/" + wallet_address )
+        new_key_full_path = KEYSTORE_PATH + "/" + wallet_address
+
+        ada = File.exist?(new_key_full_path)
 
         assert_equal(true, ada)
+
+        # delete file after test
+        File.delete(new_key_full_path) if File.exist?(new_key_full_path)
+
     end
-    
+
     # sekarang adalah block nomor 2
     # test akan kita buat pada block nomor 3
     test "def balance" do
