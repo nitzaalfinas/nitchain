@@ -7,6 +7,20 @@ require_relative "env"
 
 class Wallet
 
+    def self.create
+        key = OpenSSL::PKey::RSA.new(2048)
+
+        kembali = {}
+        kembali[:privkey] = key.to_pem
+        kembali[:pubkey] =  key.public_key.to_pem
+        kembali[:address] =  "Nx#{Digest::SHA1.hexdigest(kembali[:pubkey])}"
+        kembali[:created] = Time.now.utc
+
+        File.open("#{KEYSTORE_PATH}/#{kembali[:address]}", 'w') { |f| f.write(kembali.to_json.to_s) }
+
+        kembali[:address]
+    end
+
     def self.balance(address)
 
         # cari pada blockchain
