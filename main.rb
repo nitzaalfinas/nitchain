@@ -5,8 +5,10 @@ require 'json'
 require 'base64'
 require 'mongo'
 require 'redis'
+require "socket"
 
 require_relative 'controller/env'
+require_relative 'controller/pub'
 require_relative 'controller/wallet'
 require_relative 'controller/miner_pool'
 require_relative 'controller/miner_mine'
@@ -14,7 +16,14 @@ require_relative 'controller/merkle'
 require_relative 'controller/block'
 require_relative 'controller/blockchain'
 
-redis = Redis.new(host: "localhost", port: 4011)
+$redis = Redis.new(host: "localhost", port: 4011)
+
+$redis.subscribe('pool', 'block') do |on|
+    on.message do |channel, msg|
+        data = JSON.parse(msg)
+        puts "##{channel} - [#{data['user']}]: #{data['msg']}"
+    end
+end
 
 get '/' do
     'NitChain'
@@ -27,11 +36,8 @@ end
 # hash
 # pbkey
 post '/miner/pool/submit' do
-    if MINE === 1
-        MinerPool.submit(request.body.read)
-    else
-        {success: false, msg: 'not a miner' }.to_json
-    end
+
+    MinerPool.submit(request.body.read)
 end
 
 get '/miner/mine' do
