@@ -18,12 +18,9 @@ class Server
                 # masukkan data kedalam pool
                 if obj["command"] === "submit_to_pool"
 
-                    puts obj["data"]
-
                     kembali = Pool.add(obj["data"].to_json)
-                    puts kembali
-                    #client.write(kembali.to_json + "\n") # kirim balasan
-                    client.write("anu-anu\n")
+                    #puts kembali
+                    client.write(kembali.to_json + "\n") # kirim balasan
                 else
                     # method yang lain
                     client.write("anu-anu999\n")

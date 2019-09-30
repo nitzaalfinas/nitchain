@@ -101,8 +101,6 @@ class Wallet
 
             elsif ENV == "development"
 
-                puts "disini -----"
-
                 # kirim data
                 socket.write({command: "submit_to_pool", data: data_to_submit}.to_json + "\n")
 
@@ -112,18 +110,18 @@ class Wallet
                 @kembalian = '{"success": true}'
             end
 
-            # obj_send_to_pool = JSON.parse(send_to_pool)
-            #
-            # if obj_send_to_pool["success"] === true
-            #
-            #     # simpan dalam pool sendiri
-            #     mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
-            #     Pool.add(data_to_submit.to_json)
-            #
-            #     return {success: true, msg: "", data: data_to_submit}
-            # else
-            #     return {success: false, msg: "please check your internet"}
-            # end
+            obj_send_to_pool = JSON.parse(@kembalian)
+
+            if obj_send_to_pool["success"] === true
+
+                # simpan dalam pool sendiri (disini jika sudah ada, maka dia tidak akan menyimpan)
+                mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+                Pool.add(data_to_submit.to_json)
+
+                return {success: true, msg: "", data: data_to_submit}
+            else
+                return {success: false, msg: obj_send_to_pool["msg"]}
+            end
         else
             @kembalian = '{"success": false, "msg": "File not found"}'
         end
