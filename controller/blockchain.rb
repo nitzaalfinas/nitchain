@@ -7,9 +7,10 @@ require_relative "env"
 
 class Blockchain
 
-    @@mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
-
     def self.add_incoming_block(data)
+
+        mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+
         incomingobj = JSON.parse(data)
 
         lastblock =  Blockchain.get_last_block_in_db
@@ -21,7 +22,7 @@ class Blockchain
 
                 if Blockchain.checking_incomingtime_and_dblasttime(incomingobj, lastblock)[:success] === true
                     # add to db karena semua sudah valid
-                    @@mongoclient[:blockchains].insert_one(incomingobj)
+                    mongoclient[:blockchains].insert_one(incomingobj)
 
                     return {success: true}
                 else
@@ -64,7 +65,10 @@ class Blockchain
     end
 
     def self.get_last_block_in_db
-        lastblocks =  @@mongoclient[:blockchains].find().sort({_id: -1}).limit(1).to_a
+
+        mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+
+        lastblocks =  mongoclient[:blockchains].find().sort({_id: -1}).limit(1).to_a
 
         return lastblocks[0]
     end

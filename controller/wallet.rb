@@ -18,7 +18,7 @@ class Wallet
 
         File.open("#{KEYSTORE_PATH}/#{kembali[:address]}", 'w') { |f| f.write(kembali.to_json.to_s) }
 
-        kembali[:address]
+        return kembali[:address]
     end
 
     def self.balance(address)
