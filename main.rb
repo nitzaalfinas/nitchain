@@ -1,5 +1,3 @@
-require 'sinatra'
-
 require 'openssl'
 require 'json'
 require 'base64'
@@ -16,14 +14,6 @@ require_relative 'controller/merkle'
 require_relative 'controller/block'
 require_relative 'controller/blockchain'
 
-$redis = Redis.new(host: "localhost", port: 4011)
-
-$redis.subscribe('pool', 'block') do |on|
-    on.message do |channel, msg|
-        data = JSON.parse(msg)
-        puts "##{channel} - [#{data['user']}]: #{data['msg']}"
-    end
-end
 
 get '/' do
     'NitChain'
