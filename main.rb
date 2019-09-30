@@ -2,7 +2,6 @@ require 'openssl'
 require 'json'
 require 'base64'
 require 'mongo'
-require 'redis'
 require "socket"
 
 require_relative 'controller/env'
