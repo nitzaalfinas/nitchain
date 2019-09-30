@@ -45,7 +45,12 @@ elsif options[:command] == 'server_listen'
 elsif options[:command] == 'sync'
     Blockchain.sync(options[:data])
 
+# ruby nitchain.rb --command get_block --data 1
+elsif options[:command] == 'get_block'
+    puts Blockchain.get_block_by_number(options[:data].to_i).to_json
+
 else
+
     puts ""
     socket = TCPSocket.new('localhost', 3000)
 

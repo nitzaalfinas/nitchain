@@ -88,8 +88,6 @@ class Blockchain
 
         parameter = JSON.parse(data)
 
-        i = 0
-
         loop do
             socket = TCPSocket.new($root_ip, $root_port)
 
@@ -112,10 +110,6 @@ class Blockchain
             else
                 puts obj["msg"]
             end
-
-            i = i + 1
-            puts i
-            puts "----"
 
             sleep parameter["timesleep"]
         end
