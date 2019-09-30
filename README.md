@@ -4,8 +4,15 @@ NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof 
 ## Install
 * `bundle install`
 
-## Run
-`bundle exec rackup` or if you want to run in specific port, just run `bundle exec rackup -p 7859` and you can add --host 0.0.0.0 to make it public. But, be careful with security.
+## Command
+```bash
+ruby nitchain.rb --command wallet_create
+ruby nitchain.rb --command wallet_transfer --data '{"block":3,"from":"Nxf9c62974d550c1f12cd7d6b9913b44983cb3a096","to":"Nxf154127e23cde0c8ecbaa8b943aff970c60c590f","amount":100,"fee":5,"data":{},"time":1568933789}'
+ruby nitchain.rb --command server_listen
+ruby nitchain.rb --command sync --data '{"timesleep": 10}'
+ruby nitchain.rb --command get_block --data 1
+ruby nitchain.rb --command mine
+```
 
 ## Test
 ```bash
@@ -17,9 +24,6 @@ ruby mytest/controller/test_transaction.rb
 ruby mytest/controller/test_wallet.rb
 ```
 
-## Todo
-* Sync
-    * pool
 
 
 ## Flowcharts

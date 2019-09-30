@@ -56,13 +56,5 @@ elsif options[:command] == 'mine'
     puts Mine.mine
 
 else
-
-    puts ""
-    socket = TCPSocket.new('localhost', 3000)
-
-    # kirim data
-    socket.write("#{ARGV[0]}\n")
-
-    puts socket.gets # baca response yang didapatkan
-    socket.close
+    puts "wrong command"
 end
