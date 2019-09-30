@@ -47,6 +47,11 @@ class Wallet
 
     # from, to, amount, fee, data
     def self.transfer(data_json)
+
+        socket = TCPSocket.new($root_ip, $root_port)
+
+        @kembalian = ""
+
         obj = JSON.parse(data_json)
 
         data = {
@@ -88,30 +93,44 @@ class Wallet
             data_to_submit[:tx] = data
 
             if ENV == "production"
-                # kirim kepada pool
-                send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
+
+                # kirim data
+                socket.write({command: "submit_to_pool", data: data_to_submit}.to_json)
+
+                @kembalian = socket.gets # baca response yang didapatkan
+
             elsif ENV == "development"
-                # kirim kepada pool
-                send_to_pool = `curl -X POST -H "Content-Type: application/json" -d '#{data_to_submit.to_json}' #{MAIN_POOL}/miner/pool/submit `
+
+                puts "disini -----"
+
+                # kirim data
+                socket.write({command: "submit_to_pool", data: data_to_submit}.to_json + "\n")
+
+                @kembalian = socket.gets # baca response yang didapatkan
+
             elsif  ENV == "test"
-                send_to_pool = '{"success": true}'
+                @kembalian = '{"success": true}'
             end
 
-            obj_send_to_pool = JSON.parse(send_to_pool)
-
-            if obj_send_to_pool["success"] === true
-
-                # simpan dalam pool sendiri
-                mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
-                Pool.add(data_to_submit.to_json)
-
-                return {success: true, msg: "", data: data_to_submit}
-            else
-                return {success: false, msg: "please check your internet"}
-            end
+            # obj_send_to_pool = JSON.parse(send_to_pool)
+            #
+            # if obj_send_to_pool["success"] === true
+            #
+            #     # simpan dalam pool sendiri
+            #     mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+            #     Pool.add(data_to_submit.to_json)
+            #
+            #     return {success: true, msg: "", data: data_to_submit}
+            # else
+            #     return {success: false, msg: "please check your internet"}
+            # end
         else
-            return {success: false, msg: "File not found"}
+            @kembalian = '{"success": false, "msg": "File not found"}'
         end
+
+        socket.close
+
+        return @kembalian
     end
 
     # == Keterangan

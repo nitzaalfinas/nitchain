@@ -1,49 +1,35 @@
-# == BELUM DIPAKAI
-require "socket"
-
-# == Keterangan
-# pubsub disini adalah komunikasi antar node.
-# disini dibuat seperti chat saja
 class Server
-    def initialize( port, ip )
-        @server = TCPServer.open( ip, port )
-        @connections = Hash.new
-        @rooms = Hash.new
-        @clients = Hash.new
-        @connections[:server] = @server
-        @connections[:rooms] = @rooms
-        @connections[:clients] = @clients
-        run
-    end
 
-    def run
-        loop {
-            Thread.start(@server.accept) do | client |
-                nick_name = client.gets.chomp.to_sym
-                @connections[:clients].each do |other_name, other_client|
-                    if nick_name == other_name || client == other_client
-                        client.puts "This username already exist"
-                        Thread.kill self
-                    end
-                end
-                puts "#{nick_name} #{client}"
-                @connections[:clients][nick_name] = client
-                client.puts "Koneksi terbuat... Silahkan chat!"
-                listen_user_messages( nick_name, client )
-            end
-        }.join
-    end
+    def self.listen
+        server = TCPServer.new('localhost', 3000)
 
-    def listen_user_messages( username, client )
-        loop {
-            msg = client.gets.chomp
-            @connections[:clients].each do |other_name, other_client|
-                unless other_name == username
-                    other_client.puts "#{username.to_s}: #{msg}"
+        $stdout.sync = true
+
+        loop do
+            client = server.accept
+
+            until client.eof?
+
+                # data yang dilewatkan adalah hanya 1 baris saja dan berupa string
+                # maka disini diambil dan dibuat object nya
+                msg = client.gets
+                obj = JSON.parse(msg)
+
+                # masukkan data kedalam pool
+                if obj["command"] === "submit_to_pool"
+
+                    puts obj["data"]
+
+                    kembali = Pool.add(obj["data"].to_json)
+                    puts kembali
+                    #client.write(kembali.to_json + "\n") # kirim balasan
+                    client.write("anu-anu\n")
+                else
+                    # method yang lain
+                    client.write("anu-anu999\n")
                 end
+
             end
-        }
+        end
     end
 end
-
-Server.new( 3000, "localhost" )
