@@ -42,6 +42,24 @@ class Server
                         client.write({success:false, msg: "No block"}.to_json + "\n")
                     end
 
+                elsif obj["command"] === "broadcast_new_block"
+
+                    puts "----- broadcast_new_block -----"
+
+                    block = Blockchain.add_incoming_block(obj["data"].to_json)
+
+                    if block[:success] === true
+
+                        kembali = {
+                            success: true,
+                            data: block
+                        }
+
+                        client.write(kembali.to_json + "\n")
+                    else
+                        client.write({success:false, msg: "No block"}.to_json + "\n")
+                    end
+
                 else
                     # method yang lain
                     client.write("anu-anu999\n")

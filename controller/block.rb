@@ -13,7 +13,6 @@ class Block
         @data = data
     end
 
-
     def self.validation(block)
 
         block = JSON.parse(block)

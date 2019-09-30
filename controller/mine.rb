@@ -77,16 +77,27 @@ class Mine
         # 11. replace hash
         newblock[:hash] = minehash
 
-        # 12. HARUSNYA DARI SINI DI BROADCAST DULU, BARU DISIMPAN!!!!
+        # 12. BROADCAST NEW BLOCK!!!!
+        socket = TCPSocket.new($root_ip, $root_port)
+        socket.write({command: "broadcast_new_block", data: newblock}.to_json + "\n")
 
-        # 13. simpan block dalam database
-        mongoclient[:blockchains].insert_one(newblock)
+        # 13. minta data yang kembali
+        socket_return = socket.gets # baca response yang didapatkan
 
-        # 14. hapus data yang di pools
-        mongoclient[:pools].delete_many()
+        # 14. insert into db if it success
+        obj_socket_return = JSON.parse(socket_return)
+        if obj_socket_return["success"] === true
+            Blockchain.add_incoming_block(obj_socket_return["data"].to_json)
 
-        # 15. hapus data yang ada di poolouts
-        mongoclient[:poolouts].delete_many()
+            # 14.1. hapus data yang di pools
+            mongoclient[:pools].delete_many()
+
+            # 14.2. hapus data yang ada di poolouts
+            mongoclient[:poolouts].delete_many()
+
+        end
+
+        socket.close
 
         return newblock
     end

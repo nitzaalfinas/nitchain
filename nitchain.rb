@@ -10,6 +10,8 @@ require_relative 'controller/block'
 require_relative 'controller/blockchain'
 require_relative 'controller/server'
 require_relative 'controller/pool'
+require_relative 'controller/mine'
+require_relative 'controller/transaction'
 
 options = {}
 OptionParser.new do |opts|
@@ -48,6 +50,10 @@ elsif options[:command] == 'sync'
 # ruby nitchain.rb --command get_block --data 1
 elsif options[:command] == 'get_block'
     puts Blockchain.get_block_by_number(options[:data].to_i).to_json
+
+# ruby nitchain.rb --command mine
+elsif options[:command] == 'mine'
+    puts Mine.mine
 
 else
 
