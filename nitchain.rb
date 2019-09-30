@@ -37,9 +37,13 @@ if options[:command] == 'wallet_create'
 elsif options[:command] == 'wallet_transfer'
     puts Wallet.transfer(options[:data])
 
-# ruby main.rb --command server_listen
+# ruby nitchain.rb --command server_listen
 elsif options[:command] == 'server_listen'
     Server.listen
+
+# ruby nitchain.rb --command sync --data '{"timesleep": 10}'
+elsif options[:command] == 'sync'
+    Blockchain.sync(options[:data])
 
 else
     puts ""

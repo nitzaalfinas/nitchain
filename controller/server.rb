@@ -17,10 +17,31 @@ class Server
 
                 # masukkan data kedalam pool
                 if obj["command"] === "submit_to_pool"
+                    puts "----- submit_to_pool -----"
 
                     kembali = Pool.add(obj["data"].to_json)
                     #puts kembali
                     client.write(kembali.to_json + "\n") # kirim balasan
+                elsif obj["command"] === "sync_ask_block"
+
+                    puts "----- sync_ask_block -----"
+
+                    block = Blockchain.get_block_by_number(obj["data"])
+
+                    if block
+
+                        block.delete("_id")
+
+                        kembali = {
+                            success: true,
+                            data: block
+                        }
+
+                        client.write(kembali.to_json + "\n")
+                    else
+                        client.write({success:false, msg: "No block"}.to_json + "\n")
+                    end
+
                 else
                     # method yang lain
                     client.write("anu-anu999\n")

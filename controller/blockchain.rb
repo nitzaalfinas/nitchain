@@ -73,4 +73,51 @@ class Blockchain
         return lastblocks[0]
     end
 
+    def self.get_block_by_number(number)
+
+        mongoclient = Mongo::Client.new([ '127.0.0.1:27017' ], :database => DATABASE_NAME)
+
+        blocks =  mongoclient[:blockchains].find({"data.num": number}).sort({_id: -1}).limit(1).to_a
+
+        return blocks[0]
+    end
+
+    # == Keterangan
+    # minta data dari server yang sedang aktif
+    def self.sync(data)
+
+        parameter = JSON.parse(data)
+
+        i = 0
+
+        loop do
+            socket = TCPSocket.new($root_ip, $root_port)
+
+            # periksa block terakhir yang ada pada blockchain
+            lastblock =  Blockchain.get_last_block_in_db
+
+            lastblock.delete("_id")
+
+            next_block_id = lastblock["data"]["num"] + 1
+
+            # minta data
+            socket.write({command: "sync_ask_block", data: next_block_id}.to_json + "\n")
+            kembalian = socket.gets
+            socket.close
+
+            obj = JSON.parse(kembalian)
+
+            if obj["success"] === true
+                puts Blockchain.add_incoming_block(obj["data"].to_json)
+            else
+                puts obj["msg"]
+            end
+
+            i = i + 1
+            puts i
+            puts "----"
+
+            sleep parameter["timesleep"]
+        end
+    end
 end
