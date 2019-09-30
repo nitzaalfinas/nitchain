@@ -1,4 +1,4 @@
-# nitchain (early stage development)
+# nitchain
 NitChain is a blockchain project using Ruby. NitChain uses the consensus "Proof of Stake" and this project is creating for research purposes.
 
 ## Install
