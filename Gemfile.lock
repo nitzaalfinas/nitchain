@@ -7,7 +7,7 @@ GEM
       bson (>= 4.4.2, < 5.0.0)
     openssl (2.1.2)
     power_assert (1.1.5)
-    rack (2.2.3)
+    rack (2.2.6.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rspec (3.8.0)
